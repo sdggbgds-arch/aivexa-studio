@@ -629,5 +629,47 @@ if (hash && ['privacy', 'terms', 'content'].includes(hash)) {
   showPage(hash);
 }
 </script>
+  <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+
+<script>
+let currentLang = 'ar';
+
+const translations = {
+  ar: {
+    navHome: 'الرئيسية',
+    navPrivacy: 'سياسة الخصوصية',
+    navTerms: 'شروط الاستخدام',
+    navContent: 'سياسة المحتوى',
+    navSupport: 'الدعم',
+    heroTitle: 'حوّل أفكارك<br>إلى <span>فيديوهات</span>',
+    heroSub: 'أنشئ فيديوهات احترافية بالذكاء الاصطناعي في ثوانٍ',
+    heroCta: '🚀 جرّب مجاناً',
+    privacyTitle: 'سياسة الخصوصية',
+    termsTitle: 'شروط الاستخدام',
+    contentTitle: 'سياسة المحتوى',
+  },
+  en: {
+    navHome: 'Home',
+    navPrivacy: 'Privacy Policy',
+    navTerms: 'Terms of Service',
+    navContent: 'Content Policy',
+    navSupport: 'Support',
+    heroTitle: 'Turn Your Ideas<br>Into <span>Videos</span>',
+    heroSub: 'Create professional AI-generated videos in seconds',
+    heroCta: '🚀 Try Free',
+    privacyTitle: 'Privacy Policy',
+    termsTitle: 'Terms of Service',
+    contentTitle: 'Content Policy',
+  }
+};
+
+function toggleLang() {
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById('langBtn').textContent = 
+    currentLang === 'ar' ? 'EN' : 'AR';
+}
+</script>
 </body>
 </html>

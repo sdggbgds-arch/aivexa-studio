@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aivexa Studio — مولّد الفيديو بالذكاء الاصطناعي</title>
-  <meta name="description" content="حوّل أفكارك إلى فيديوهات احترافية بالذكاء الاصطناعي في ثوانٍ">
+  <title>Aivexa Studio — AI Video Generator</title>
+  <meta name="description" content="Turn your ideas into professional AI videos in seconds">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #08060f;
@@ -19,31 +19,25 @@
       --text-muted: rgba(248,248,255,0.6);
       --text-faint: rgba(248,248,255,0.35);
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: 'Cairo', sans-serif;
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
       line-height: 1.6;
     }
-
-    /* ── NOISE TEXTURE ── */
+    body.lang-ar { font-family: 'Cairo', sans-serif; }
+    body.lang-en { font-family: 'Inter', sans-serif; }
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 0;
-      opacity: 0.6;
+      opacity: 0.5;
     }
-
-    /* ── GLOW ORBS ── */
     .orb {
       position: fixed;
       border-radius: 50%;
@@ -53,71 +47,78 @@
     }
     .orb-1 {
       width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(109,40,217,0.25), transparent 70%);
+      background: radial-gradient(circle, rgba(109,40,217,0.2), transparent 70%);
       top: -100px; right: -100px;
       animation: floatOrb 8s ease-in-out infinite;
     }
     .orb-2 {
       width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%);
+      background: radial-gradient(circle, rgba(139,92,246,0.12), transparent 70%);
       bottom: 20%; left: -100px;
       animation: floatOrb 10s ease-in-out infinite reverse;
     }
     @keyframes floatOrb {
-      0%, 100% { transform: translateY(0); }
+      0%,100% { transform: translateY(0); }
       50% { transform: translateY(-30px); }
     }
-
-    /* ── NAV ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      padding: 16px 24px;
+      padding: 14px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(8,6,15,0.8);
+      background: rgba(8,6,15,0.85);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
+      gap: 12px;
     }
-
     .nav-logo {
       font-size: 20px;
       font-weight: 900;
-      background: linear-gradient(135deg, #A78BFA, #8B5CF6, #6D28D9);
+      background: linear-gradient(135deg, #A78BFA, #8B5CF6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
+      white-space: nowrap;
     }
-
     .nav-links {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       list-style: none;
+      flex-wrap: wrap;
+      justify-content: center;
     }
-
     .nav-links a {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
       transition: all 0.2s;
+      cursor: pointer;
+      white-space: nowrap;
     }
     .nav-links a:hover {
       color: var(--text);
       background: rgba(139,92,246,0.1);
     }
-
-    /* ── SECTIONS ── */
-    section {
-      position: relative;
-      z-index: 1;
+    .lang-btn {
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.3);
+      color: var(--purple-light);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
     }
-
-    /* ── HERO ── */
+    .lang-btn:hover { background: rgba(139,92,246,0.2); }
+    section { position: relative; z-index: 1; }
     .hero {
       min-height: 100vh;
       display: flex;
@@ -127,7 +128,6 @@
       text-align: center;
       padding: 100px 24px 60px;
     }
-
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -140,39 +140,34 @@
       font-weight: 700;
       color: var(--purple-light);
       margin-bottom: 24px;
-      animation: fadeInUp 0.6s ease both;
+      animation: fadeUp 0.6s ease both;
     }
-
     .hero-title {
-      font-size: clamp(36px, 8vw, 72px);
+      font-size: clamp(32px, 7vw, 68px);
       font-weight: 900;
       line-height: 1.1;
       margin-bottom: 20px;
-      animation: fadeInUp 0.6s ease 0.1s both;
+      animation: fadeUp 0.6s ease 0.1s both;
     }
-
-    .hero-title span {
-      background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 50%, #6D28D9 100%);
+    .hero-title .grad {
+      background: linear-gradient(135deg, #A78BFA, #8B5CF6, #6D28D9);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
     .hero-sub {
-      font-size: clamp(16px, 2.5vw, 20px);
+      font-size: clamp(15px, 2.5vw, 19px);
       color: var(--text-muted);
-      max-width: 560px;
+      max-width: 540px;
       margin-bottom: 40px;
-      animation: fadeInUp 0.6s ease 0.2s both;
+      animation: fadeUp 0.6s ease 0.2s both;
     }
-
     .hero-btns {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
       justify-content: center;
-      animation: fadeInUp 0.6s ease 0.3s both;
+      animation: fadeUp 0.6s ease 0.3s both;
     }
-
     .btn-primary {
       padding: 14px 32px;
       border-radius: 14px;
@@ -180,7 +175,6 @@
       color: white;
       font-size: 15px;
       font-weight: 700;
-      font-family: 'Cairo', sans-serif;
       border: none;
       cursor: pointer;
       text-decoration: none;
@@ -190,11 +184,7 @@
       box-shadow: 0 8px 32px rgba(139,92,246,0.35);
       transition: all 0.2s;
     }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(139,92,246,0.5);
-    }
-
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(139,92,246,0.5); }
     .btn-secondary {
       padding: 14px 32px;
       border-radius: 14px;
@@ -203,7 +193,6 @@
       color: var(--purple-light);
       font-size: 15px;
       font-weight: 700;
-      font-family: 'Cairo', sans-serif;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
@@ -211,465 +200,352 @@
       gap: 8px;
       transition: all 0.2s;
     }
-    .btn-secondary:hover {
-      background: rgba(139,92,246,0.15);
-    }
-
-    /* ── FEATURES ── */
-    .features {
-      padding: 80px 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 32px;
-      font-weight: 900;
-      margin-bottom: 12px;
-    }
-
-    .section-sub {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 16px;
-      margin-bottom: 48px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .feature-card {
+    .btn-secondary:hover { background: rgba(139,92,246,0.15); }
+    .features { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+    .sec-title { text-align: center; font-size: 30px; font-weight: 900; margin-bottom: 12px; }
+    .sec-sub { text-align: center; color: var(--text-muted); font-size: 15px; margin-bottom: 48px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 28px;
       transition: all 0.3s;
     }
-    .feature-card:hover {
+    .card:hover {
       border-color: rgba(139,92,246,0.4);
       transform: translateY(-4px);
       box-shadow: 0 12px 40px rgba(139,92,246,0.1);
     }
-
-    .feature-icon {
-      font-size: 32px;
-      margin-bottom: 16px;
-    }
-
-    .feature-title {
-      font-size: 17px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .feature-desc {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
-
-    /* ── FOOTER ── */
+    .card-icon { font-size: 30px; margin-bottom: 14px; }
+    .card-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+    .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
     footer {
       border-top: 1px solid var(--border);
       padding: 40px 24px;
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
-
     .footer-logo {
-      font-size: 22px;
-      font-weight: 900;
+      font-size: 22px; font-weight: 900;
       background: linear-gradient(135deg, #A78BFA, #6D28D9);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 16px;
     }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .footer-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
+    .footer-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 600; transition: color 0.2s; cursor: pointer; }
     .footer-links a:hover { color: var(--purple-light); }
-
-    .footer-copy {
-      font-size: 12px;
-      color: var(--text-faint);
-    }
-
-    /* ── LEGAL PAGES ── */
-    .legal-page {
-      display: none;
-      min-height: 100vh;
-      padding: 100px 24px 60px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .legal-page.active { display: block; }
-
-    .legal-title {
-      font-size: 32px;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    .legal-date {
-      font-size: 13px;
-      color: var(--text-faint);
-      margin-bottom: 40px;
-    }
-
-    .legal-content h2 {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--purple-light);
-      margin: 32px 0 12px;
-    }
-
-    .legal-content p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.8;
-      margin-bottom: 12px;
-    }
-
-    .legal-content ul {
-      padding-right: 20px;
-      margin-bottom: 12px;
-    }
-
-    .legal-content li {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.8;
-      margin-bottom: 6px;
-    }
-
-    .home-page { display: block; }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+    .footer-copy { font-size: 12px; color: var(--text-faint); }
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: block; }
+    .legal-wrap { padding: 100px 24px 60px; max-width: 780px; margin: 0 auto; }
+    .legal-title { font-size: 30px; font-weight: 900; margin-bottom: 6px; }
+    .legal-date { font-size: 12px; color: var(--text-faint); margin-bottom: 36px; }
+    .legal-content h2 { font-size: 17px; font-weight: 800; color: var(--purple-light); margin: 28px 0 10px; }
+    .legal-content p { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 10px; }
+    .legal-content ul { padding-inline-start: 20px; margin-bottom: 10px; }
+    .legal-content li { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 4px; }
+    .legal-content a { color: var(--purple-light); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .nav-links { display: none; }
       .hero-btns { flex-direction: column; align-items: center; }
     }
-    .lang-btn {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 999;
-  padding: 8px 16px;
-  border-radius: 20px;
-  background: rgba(139,92,246,0.2);
-  border: 1px solid rgba(139,92,246,0.4);
-  color: #A78BFA;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'Cairo', sans-serif;
-}
   </style>
 </head>
-<body>
+<body class="lang-ar">
 
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo">Aivexa Studio</div>
   <ul class="nav-links">
-    <li><a href="#" onclick="showPage('home')">الرئيسية</a></li>
-    <li><a href="#" onclick="showPage('privacy')">سياسة الخصوصية</a></li>
-    <li><a href="#" onclick="showPage('terms')">شروط الاستخدام</a></li>
-    <li><a href="#" onclick="showPage('content')">سياسة المحتوى</a></li>
-    <li><a href="mailto:aivexastudio@gmail.com">الدعم</a></li>
+    <li><a onclick="showPage('home')" id="nav-home">الرئيسية</a></li>
+    <li><a onclick="showPage('privacy')" id="nav-privacy">سياسة الخصوصية</a></li>
+    <li><a onclick="showPage('terms')" id="nav-terms">شروط الاستخدام</a></li>
+    <li><a onclick="showPage('content')" id="nav-content">سياسة المحتوى</a></li>
+    <li><a href="mailto:aivexastudio@gmail.com" id="nav-support">الدعم</a></li>
   </ul>
+  <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
 </nav>
 
-<!-- HOME PAGE -->
-<div id="home-page" class="home-page">
-
+<!-- HOME -->
+<div id="home-page" class="page active">
   <section class="hero">
-    <div class="hero-badge">✨ مدعوم بالذكاء الاصطناعي</div>
-    <h1 class="hero-title">
-      حوّل أفكارك<br>
-      إلى <span>فيديوهات</span>
+    <div class="hero-badge" id="badge">✨ مدعوم بالذكاء الاصطناعي</div>
+    <h1 class="hero-title" id="heroTitle">
+      حوّل أفكارك<br>إلى <span class="grad">فيديوهات</span>
     </h1>
-    <p class="hero-sub">
-      أنشئ فيديوهات احترافية بالذكاء الاصطناعي في ثوانٍ.
-      اكتب وصفاً أو ارفع صورة وشاهد إبداعك يتحول إلى حقيقة.
-    </p>
+    <p class="hero-sub" id="heroSub">أنشئ فيديوهات احترافية بالذكاء الاصطناعي في ثوانٍ. اكتب وصفاً أو ارفع صورة وشاهد إبداعك يتحول إلى حقيقة.</p>
     <div class="hero-btns">
-      <a href="#" class="btn-primary">🚀 جرّب مجاناً</a>
-      <a href="mailto:aivexastudio@gmail.com" class="btn-secondary">📩 تواصل معنا</a>
+      <a href="https://aivexa-studio-ai-app-da65.bolt.host" target="_blank" class="btn-primary" id="ctaBtn">🚀 جرّب مجاناً</a>
+      <a href="mailto:aivexastudio@gmail.com" class="btn-secondary" id="contactBtn">📩 تواصل معنا</a>
     </div>
   </section>
-
   <section class="features">
-    <h2 class="section-title">لماذا Aivexa Studio؟</h2>
-    <p class="section-sub">كل ما تحتاجه لإنشاء محتوى فيديو احترافي</p>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🎬</div>
-        <div class="feature-title">نص إلى فيديو</div>
-        <div class="feature-desc">اكتب وصفاً وشاهد الذكاء الاصطناعي يحوّله إلى فيديو سينمائي احترافي</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🖼️</div>
-        <div class="feature-title">صورة إلى فيديو</div>
-        <div class="feature-desc">ارفع أي صورة وأضف حركة حياة عليها بتأثيرات بصرية مذهلة</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">✨</div>
-        <div class="feature-title">تحسين ذكي للبرومبت</div>
-        <div class="feature-desc">الذكاء الاصطناعي يحسّن وصفك تلقائياً لأفضل نتيجة ممكنة</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🌍</div>
-        <div class="feature-title">استكشف الإبداعات</div>
-        <div class="feature-desc">اكتشف وشاهد فيديوهات من مستخدمين حول العالم في feed تفاعلي</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">سريع وسهل</div>
-        <div class="feature-desc">فيديو جاهز في دقائق — بدون خبرة تقنية أو برامج معقدة</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📱</div>
-        <div class="feature-title">مصمم للهاتف</div>
-        <div class="feature-desc">تجربة مثالية على الهاتف تشبه TikTok وInstagram Reels</div>
-      </div>
+    <h2 class="sec-title" id="featTitle">لماذا Aivexa Studio؟</h2>
+    <p class="sec-sub" id="featSub">كل ما تحتاجه لإنشاء محتوى فيديو احترافي</p>
+    <div class="grid">
+      <div class="card"><div class="card-icon">🎬</div><div class="card-title" id="f1t">نص إلى فيديو</div><div class="card-desc" id="f1d">اكتب وصفاً وشاهد الذكاء الاصطناعي يحوّله إلى فيديو سينمائي احترافي</div></div>
+      <div class="card"><div class="card-icon">🖼️</div><div class="card-title" id="f2t">صورة إلى فيديو</div><div class="card-desc" id="f2d">ارفع أي صورة وأضف حركة حياة عليها بتأثيرات بصرية مذهلة</div></div>
+      <div class="card"><div class="card-icon">✨</div><div class="card-title" id="f3t">تحسين ذكي للبرومبت</div><div class="card-desc" id="f3d">الذكاء الاصطناعي يحسّن وصفك تلقائياً لأفضل نتيجة ممكنة</div></div>
+      <div class="card"><div class="card-icon">🌍</div><div class="card-title" id="f4t">استكشف الإبداعات</div><div class="card-desc" id="f4d">اكتشف فيديوهات من مستخدمين حول العالم في feed تفاعلي</div></div>
+      <div class="card"><div class="card-icon">⚡</div><div class="card-title" id="f5t">سريع وسهل</div><div class="card-desc" id="f5d">فيديو جاهز في دقائق — بدون خبرة تقنية</div></div>
+      <div class="card"><div class="card-icon">📱</div><div class="card-title" id="f6t">مصمم للهاتف</div><div class="card-desc" id="f6d">تجربة مثالية على الهاتف تشبه TikTok وInstagram Reels</div></div>
     </div>
   </section>
-
 </div>
 
-<!-- PRIVACY POLICY -->
-<div id="privacy-page" class="legal-page">
-  <h1 class="legal-title">سياسة الخصوصية</h1>
-  <p class="legal-date">آخر تحديث: أبريل 2026</p>
-  <div class="legal-content">
-    <h2>1. المعلومات التي نجمعها</h2>
-    <p>عند استخدامك لتطبيق Aivexa Studio، نجمع المعلومات التالية:</p>
-    <ul>
-      <li>معلومات الحساب: الاسم، البريد الإلكتروني، وصورة الملف الشخصي من حساب Google</li>
-      <li>المحتوى الذي تنشئه: النصوص والصور والفيديوهات المولّدة</li>
-      <li>بيانات الاستخدام: عدد الفيديوهات، الرصيد المستخدم، تاريخ الإنشاء</li>
-      <li>بيانات التفاعل: الإعجابات، المشاهدات، والتعليقات في Explore</li>
-    </ul>
-
-    <h2>2. كيف نستخدم معلوماتك</h2>
-    <p>نستخدم المعلومات المجموعة من أجل:</p>
-    <ul>
-      <li>توفير خدمة توليد الفيديو بالذكاء الاصطناعي</li>
-      <li>إدارة حسابك ورصيدك</li>
-      <li>تحسين جودة الخدمة وتطوير ميزات جديدة</li>
-      <li>ضمان الامتثال لسياسة المحتوى</li>
-      <li>التواصل معك بشأن حسابك أو التحديثات المهمة</li>
-    </ul>
-
-    <h2>3. مشاركة المعلومات</h2>
-    <p>لا نبيع أو نؤجر بياناتك الشخصية لأطراف ثالثة. قد نشارك بياناتك مع:</p>
-    <ul>
-      <li>مزودي الخدمة (Supabase للبنية التحتية، xAI لتوليد الفيديو)</li>
-      <li>السلطات القانونية عند الضرورة القانونية</li>
-    </ul>
-
-    <h2>4. حفظ البيانات</h2>
-    <p>نحتفظ ببياناتك طالما حسابك نشط. يمكنك حذف حسابك في أي وقت من إعدادات الملف الشخصي، وسيتم حذف جميع بياناتك خلال 30 يوماً.</p>
-
-    <h2>5. الأمان</h2>
-    <p>نستخدم تشفير SSL/TLS لحماية بياناتك أثناء النقل، ونخزن بياناتك على خوادم آمنة.</p>
-
-    <h2>6. حقوقك</h2>
-    <ul>
-      <li>الوصول إلى بياناتك الشخصية</li>
-      <li>تصحيح أو تحديث معلوماتك</li>
-      <li>حذف حسابك وجميع بياناتك</li>
-      <li>تصدير بياناتك</li>
-    </ul>
-
-    <h2>7. التواصل</h2>
-    <p>لأي استفسار حول خصوصيتك، تواصل معنا على: <a href="mailto:aivexastudio@gmail.com" style="color: var(--purple-light)">aivexastudio@gmail.com</a></p>
+<!-- PRIVACY -->
+<div id="privacy-page" class="page">
+  <div class="legal-wrap">
+    <h1 class="legal-title" id="privTitle">سياسة الخصوصية</h1>
+    <p class="legal-date" id="privDate">آخر تحديث: أبريل 2026</p>
+    <div class="legal-content" id="privContent">
+      <h2>1. المعلومات التي نجمعها</h2>
+      <ul>
+        <li>معلومات الحساب: الاسم، البريد الإلكتروني، وصورة الملف الشخصي من Google</li>
+        <li>المحتوى الذي تنشئه: النصوص والصور والفيديوهات</li>
+        <li>بيانات الاستخدام: عدد الفيديوهات، الرصيد، تاريخ الإنشاء</li>
+        <li>بيانات التفاعل: الإعجابات والمشاهدات</li>
+      </ul>
+      <h2>2. كيف نستخدم معلوماتك</h2>
+      <ul>
+        <li>توفير خدمة توليد الفيديو</li>
+        <li>إدارة حسابك ورصيدك</li>
+        <li>تحسين جودة الخدمة</li>
+        <li>ضمان الامتثال لسياسة المحتوى</li>
+      </ul>
+      <h2>3. مشاركة المعلومات</h2>
+      <p>لا نبيع بياناتك. قد نشارك مع مزودي الخدمة (Supabase، xAI) والسلطات القانونية عند الضرورة.</p>
+      <h2>4. حفظ البيانات</h2>
+      <p>نحتفظ ببياناتك طالما حسابك نشط. يمكنك حذف حسابك من الإعدادات وسيتم حذف بياناتك خلال 30 يوماً.</p>
+      <h2>5. الأمان</h2>
+      <p>نستخدم تشفير SSL/TLS لحماية بياناتك.</p>
+      <h2>6. حقوقك</h2>
+      <ul>
+        <li>الوصول إلى بياناتك وتصحيحها</li>
+        <li>حذف حسابك وجميع بياناتك</li>
+        <li>تصدير بياناتك</li>
+      </ul>
+      <h2>7. التواصل</h2>
+      <p>للاستفسارات: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>
+    </div>
   </div>
 </div>
 
-<!-- TERMS OF SERVICE -->
-<div id="terms-page" class="legal-page">
-  <h1 class="legal-title">شروط الاستخدام</h1>
-  <p class="legal-date">آخر تحديث: أبريل 2026</p>
-  <div class="legal-content">
-    <h2>1. قبول الشروط</h2>
-    <p>باستخدامك لتطبيق Aivexa Studio، فإنك توافق على هذه الشروط. إذا لم توافق، يرجى عدم استخدام التطبيق.</p>
-
-    <h2>2. الأهلية</h2>
-    <p>يجب أن يكون عمرك 17 عاماً أو أكثر لاستخدام التطبيق. باستخدامك للتطبيق، تؤكد أنك تستوفي هذا الشرط.</p>
-
-    <h2>3. الحساب</h2>
-    <ul>
-      <li>أنت مسؤول عن الحفاظ على أمان حسابك</li>
-      <li>تسجيل الدخول متاح فقط عبر Google OAuth</li>
-      <li>حساب واحد لكل مستخدم</li>
-    </ul>
-
-    <h2>4. نظام الرصيد</h2>
-    <ul>
-      <li>تبدأ بـ 50 رصيداً مجانياً</li>
-      <li>الفيديو 5 ثوانٍ = 10 أرصدة</li>
-      <li>الحد اليومي المجاني = فيديوان يومياً</li>
-      <li>الرصيد يُستردّ في حالة فشل الإنشاء</li>
-    </ul>
-
-    <h2>5. الملكية الفكرية</h2>
-    <p>الفيديوهات التي تنشئها ملك لك. نمنحك ترخيصاً غير حصري لاستخدام التطبيق وخدماته.</p>
-
-    <h2>6. المحتوى المحظور</h2>
-    <p>راجع سياسة المحتوى للاطلاع على قائمة المحتوى المحظور.</p>
-
-    <h2>7. إنهاء الخدمة</h2>
-    <p>نحتفظ بالحق في تعليق أو إنهاء حسابك في حالة انتهاك هذه الشروط.</p>
-
-    <h2>8. إخلاء المسؤولية</h2>
-    <p>الخدمة مقدمة "كما هي" دون ضمانات. لسنا مسؤولين عن أي أضرار غير مباشرة.</p>
-
-    <h2>9. التواصل</h2>
-    <p>للاستفسارات: <a href="mailto:aivexastudio@gmail.com" style="color: var(--purple-light)">aivexastudio@gmail.com</a></p>
+<!-- TERMS -->
+<div id="terms-page" class="page">
+  <div class="legal-wrap">
+    <h1 class="legal-title" id="termsTitle">شروط الاستخدام</h1>
+    <p class="legal-date" id="termsDate">آخر تحديث: أبريل 2026</p>
+    <div class="legal-content" id="termsContent">
+      <h2>1. قبول الشروط</h2>
+      <p>باستخدام Aivexa Studio فإنك توافق على هذه الشروط.</p>
+      <h2>2. الأهلية</h2>
+      <p>يجب أن يكون عمرك 17 عاماً أو أكثر.</p>
+      <h2>3. الحساب</h2>
+      <ul>
+        <li>التسجيل عبر Google OAuth فقط</li>
+        <li>حساب واحد لكل مستخدم</li>
+        <li>أنت مسؤول عن حماية حسابك</li>
+      </ul>
+      <h2>4. نظام الرصيد</h2>
+      <ul>
+        <li>50 رصيداً ترحيبياً مجانياً</li>
+        <li>فيديو 5 ثوانٍ = 10 أرصدة</li>
+        <li>2 فيديو يومياً للمجانيين</li>
+        <li>الرصيد يُستردّ عند فشل الإنشاء</li>
+      </ul>
+      <h2>5. الملكية الفكرية</h2>
+      <p>الفيديوهات التي تنشئها ملك لك.</p>
+      <h2>6. إنهاء الخدمة</h2>
+      <p>نحتفظ بحق تعليق الحسابات المخالفة.</p>
+      <h2>7. التواصل</h2>
+      <p><a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>
+    </div>
   </div>
 </div>
 
 <!-- CONTENT POLICY -->
-<div id="content-page" class="legal-page">
-  <h1 class="legal-title">سياسة المحتوى</h1>
-  <p class="legal-date">آخر تحديث: أبريل 2026</p>
-  <div class="legal-content">
-    <h2>المحتوى المحظور تماماً</h2>
-    <p>يُحظر إنشاء أو نشر أي محتوى يحتوي على:</p>
-    <ul>
-      <li>محتوى جنسي صريح أو إيحائي</li>
-      <li>عنف مفرط أو محتوى مزعج</li>
-      <li>خطاب الكراهية أو التمييز</li>
-      <li>معلومات مضللة أو خاطئة</li>
-      <li>محتوى ينتهك حقوق الملكية الفكرية</li>
-      <li>محتوى يستهدف الأطفال بشكل غير لائق</li>
-      <li>محتوى إرهابي أو متطرف</li>
-    </ul>
-
-    <h2>المحتوى المسموح به</h2>
-    <ul>
-      <li>مشاهد طبيعية وفنية وإبداعية</li>
-      <li>محتوى تعليمي وثقافي</li>
-      <li>أعمال خيالية وخيال علمي</li>
-      <li>محتوى ترفيهي عائلي</li>
-    </ul>
-
-    <h2>نظام المراجعة</h2>
-    <p>جميع الفيديوهات المقدمة لـ Explore تخضع لمراجعة يدوية من فريق الإدارة قبل النشر.</p>
-
-    <h2>الإبلاغ عن المحتوى</h2>
-    <p>إذا وجدت محتوى مخالفاً، يمكنك الإبلاغ عنه مباشرة من التطبيق أو عبر: <a href="mailto:aivexastudio@gmail.com" style="color: var(--purple-light)">aivexastudio@gmail.com</a></p>
-
-    <h2>العقوبات</h2>
-    <ul>
-      <li>تحذير أول: إزالة المحتوى</li>
-      <li>تحذير ثاني: تعليق مؤقت</li>
-      <li>مخالفات متكررة: حظر دائم</li>
-    </ul>
+<div id="content-page" class="page">
+  <div class="legal-wrap">
+    <h1 class="legal-title" id="contentTitle">سياسة المحتوى</h1>
+    <p class="legal-date" id="contentDate">آخر تحديث: أبريل 2026</p>
+    <div class="legal-content" id="contentContent">
+      <h2>المحتوى المحظور</h2>
+      <ul>
+        <li>محتوى جنسي صريح أو إيحائي</li>
+        <li>عنف مفرط أو محتوى مزعج</li>
+        <li>خطاب الكراهية أو التمييز</li>
+        <li>معلومات مضللة أو خاطئة</li>
+        <li>انتهاك حقوق الملكية الفكرية</li>
+        <li>محتوى إرهابي أو متطرف</li>
+      </ul>
+      <h2>المحتوى المسموح</h2>
+      <ul>
+        <li>مشاهد طبيعية وفنية وإبداعية</li>
+        <li>محتوى تعليمي وثقافي</li>
+        <li>خيال علمي وأعمال خيالية</li>
+      </ul>
+      <h2>نظام المراجعة</h2>
+      <p>جميع الفيديوهات في Explore تخضع لمراجعة يدوية قبل النشر.</p>
+      <h2>الإبلاغ</h2>
+      <p>للإبلاغ عن محتوى مخالف: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>
+      <h2>العقوبات</h2>
+      <ul>
+        <li>تحذير أول: إزالة المحتوى</li>
+        <li>تحذير ثانٍ: تعليق مؤقت</li>
+        <li>مخالفات متكررة: حظر دائم</li>
+      </ul>
+    </div>
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">Aivexa Studio</div>
   <div class="footer-links">
-    <a href="#" onclick="showPage('home')">الرئيسية</a>
-    <a href="#" onclick="showPage('privacy')">سياسة الخصوصية</a>
-    <a href="#" onclick="showPage('terms')">شروط الاستخدام</a>
-    <a href="#" onclick="showPage('content')">سياسة المحتوى</a>
-    <a href="mailto:aivexastudio@gmail.com">الدعم</a>
+    <a onclick="showPage('home')" id="fl-home">الرئيسية</a>
+    <a onclick="showPage('privacy')" id="fl-privacy">سياسة الخصوصية</a>
+    <a onclick="showPage('terms')" id="fl-terms">شروط الاستخدام</a>
+    <a onclick="showPage('content')" id="fl-content">سياسة المحتوى</a>
+    <a href="mailto:aivexastudio@gmail.com" id="fl-support">الدعم</a>
   </div>
-  <p class="footer-copy">© 2026 Aivexa Studio. جميع الحقوق محفوظة.</p>
+  <p class="footer-copy">© 2026 Aivexa Studio. All rights reserved.</p>
 </footer>
 
 <script>
-function showPage(page) {
-  document.getElementById('home-page').style.display = 'none';
-  document.getElementById('privacy-page').classList.remove('active');
-  document.getElementById('terms-page').classList.remove('active');
-  document.getElementById('content-page').classList.remove('active');
-
-  if (page === 'home') {
-    document.getElementById('home-page').style.display = 'block';
-  } else {
-    document.getElementById(page + '-page').classList.add('active');
-  }
-  window.scrollTo(0, 0);
-}
-
-// Handle direct URL hash
-const hash = window.location.hash.replace('#', '');
-if (hash && ['privacy', 'terms', 'content'].includes(hash)) {
-  showPage(hash);
-}
-</script>
-  <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
-
-<script>
-let currentLang = 'ar';
-
-const translations = {
+const T = {
   ar: {
-    navHome: 'الرئيسية',
-    navPrivacy: 'سياسة الخصوصية',
-    navTerms: 'شروط الاستخدام',
-    navContent: 'سياسة المحتوى',
-    navSupport: 'الدعم',
-    heroTitle: 'حوّل أفكارك<br>إلى <span>فيديوهات</span>',
-    heroSub: 'أنشئ فيديوهات احترافية بالذكاء الاصطناعي في ثوانٍ',
-    heroCta: '🚀 جرّب مجاناً',
-    privacyTitle: 'سياسة الخصوصية',
-    termsTitle: 'شروط الاستخدام',
-    contentTitle: 'سياسة المحتوى',
+    dir: 'rtl', lang: 'ar', btnLang: 'EN', bodyClass: 'lang-ar',
+    navHome: 'الرئيسية', navPrivacy: 'سياسة الخصوصية', navTerms: 'شروط الاستخدام',
+    navContent: 'سياسة المحتوى', navSupport: 'الدعم',
+    badge: '✨ مدعوم بالذكاء الاصطناعي',
+    heroTitle: 'حوّل أفكارك<br>إلى <span class="grad">فيديوهات</span>',
+    heroSub: 'أنشئ فيديوهات احترافية بالذكاء الاصطناعي في ثوانٍ. اكتب وصفاً أو ارفع صورة وشاهد إبداعك يتحول إلى حقيقة.',
+    ctaBtn: '🚀 جرّب مجاناً', contactBtn: '📩 تواصل معنا',
+    featTitle: 'لماذا Aivexa Studio؟', featSub: 'كل ما تحتاجه لإنشاء محتوى فيديو احترافي',
+    f1t:'نص إلى فيديو', f1d:'اكتب وصفاً وشاهد الذكاء الاصطناعي يحوّله إلى فيديو سينمائي احترافي',
+    f2t:'صورة إلى فيديو', f2d:'ارفع أي صورة وأضف حركة حياة عليها بتأثيرات بصرية مذهلة',
+    f3t:'تحسين ذكي للبرومبت', f3d:'الذكاء الاصطناعي يحسّن وصفك تلقائياً لأفضل نتيجة ممكنة',
+    f4t:'استكشف الإبداعات', f4d:'اكتشف فيديوهات من مستخدمين حول العالم في feed تفاعلي',
+    f5t:'سريع وسهل', f5d:'فيديو جاهز في دقائق — بدون خبرة تقنية',
+    f6t:'مصمم للهاتف', f6d:'تجربة مثالية على الهاتف تشبه TikTok وInstagram Reels',
+    privTitle:'سياسة الخصوصية', privDate:'آخر تحديث: أبريل 2026',
+    privContent:`<h2>1. المعلومات التي نجمعها</h2><ul><li>معلومات الحساب: الاسم، البريد الإلكتروني، وصورة الملف الشخصي من Google</li><li>المحتوى الذي تنشئه: النصوص والصور والفيديوهات</li><li>بيانات الاستخدام: عدد الفيديوهات، الرصيد، تاريخ الإنشاء</li><li>بيانات التفاعل: الإعجابات والمشاهدات</li></ul><h2>2. كيف نستخدم معلوماتك</h2><ul><li>توفير خدمة توليد الفيديو</li><li>إدارة حسابك ورصيدك</li><li>تحسين جودة الخدمة</li><li>ضمان الامتثال لسياسة المحتوى</li></ul><h2>3. مشاركة المعلومات</h2><p>لا نبيع بياناتك. قد نشارك مع مزودي الخدمة (Supabase، xAI) والسلطات القانونية عند الضرورة.</p><h2>4. حفظ البيانات</h2><p>نحتفظ ببياناتك طالما حسابك نشط. يمكنك حذف حسابك وسيتم حذف بياناتك خلال 30 يوماً.</p><h2>5. الأمان</h2><p>نستخدم تشفير SSL/TLS لحماية بياناتك.</p><h2>6. حقوقك</h2><ul><li>الوصول إلى بياناتك وتصحيحها</li><li>حذف حسابك وجميع بياناتك</li><li>تصدير بياناتك</li></ul><h2>7. التواصل</h2><p>للاستفسارات: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>`,
+    termsTitle:'شروط الاستخدام', termsDate:'آخر تحديث: أبريل 2026',
+    termsContent:`<h2>1. قبول الشروط</h2><p>باستخدام Aivexa Studio فإنك توافق على هذه الشروط.</p><h2>2. الأهلية</h2><p>يجب أن يكون عمرك 17 عاماً أو أكثر.</p><h2>3. الحساب</h2><ul><li>التسجيل عبر Google OAuth فقط</li><li>حساب واحد لكل مستخدم</li><li>أنت مسؤول عن حماية حسابك</li></ul><h2>4. نظام الرصيد</h2><ul><li>50 رصيداً ترحيبياً مجانياً</li><li>فيديو 5 ثوانٍ = 10 أرصدة</li><li>2 فيديو يومياً للمجانيين</li><li>الرصيد يُستردّ عند فشل الإنشاء</li></ul><h2>5. الملكية الفكرية</h2><p>الفيديوهات التي تنشئها ملك لك.</p><h2>6. إنهاء الخدمة</h2><p>نحتفظ بحق تعليق الحسابات المخالفة.</p><h2>7. التواصل</h2><p><a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>`,
+    contentTitle:'سياسة المحتوى', contentDate:'آخر تحديث: أبريل 2026',
+    contentContent:`<h2>المحتوى المحظور</h2><ul><li>محتوى جنسي صريح أو إيحائي</li><li>عنف مفرط أو محتوى مزعج</li><li>خطاب الكراهية أو التمييز</li><li>معلومات مضللة أو خاطئة</li><li>انتهاك حقوق الملكية الفكرية</li><li>محتوى إرهابي أو متطرف</li></ul><h2>المحتوى المسموح</h2><ul><li>مشاهد طبيعية وفنية وإبداعية</li><li>محتوى تعليمي وثقافي</li><li>خيال علمي وأعمال خيالية</li></ul><h2>نظام المراجعة</h2><p>جميع الفيديوهات في Explore تخضع لمراجعة يدوية قبل النشر.</p><h2>الإبلاغ</h2><p>للإبلاغ: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p><h2>العقوبات</h2><ul><li>تحذير أول: إزالة المحتوى</li><li>تحذير ثانٍ: تعليق مؤقت</li><li>مخالفات متكررة: حظر دائم</li></ul>`,
+    flHome:'الرئيسية', flPrivacy:'سياسة الخصوصية', flTerms:'شروط الاستخدام',
+    flContent:'سياسة المحتوى', flSupport:'الدعم',
   },
   en: {
-    navHome: 'Home',
-    navPrivacy: 'Privacy Policy',
-    navTerms: 'Terms of Service',
-    navContent: 'Content Policy',
-    navSupport: 'Support',
-    heroTitle: 'Turn Your Ideas<br>Into <span>Videos</span>',
-    heroSub: 'Create professional AI-generated videos in seconds',
-    heroCta: '🚀 Try Free',
-    privacyTitle: 'Privacy Policy',
-    termsTitle: 'Terms of Service',
-    contentTitle: 'Content Policy',
+    dir: 'ltr', lang: 'en', btnLang: 'AR', bodyClass: 'lang-en',
+    navHome: 'Home', navPrivacy: 'Privacy Policy', navTerms: 'Terms of Service',
+    navContent: 'Content Policy', navSupport: 'Support',
+    badge: '✨ Powered by AI',
+    heroTitle: 'Turn Your Ideas<br>Into <span class="grad">Videos</span>',
+    heroSub: 'Create professional AI videos in seconds. Write a description or upload an image and watch your idea come to life.',
+    ctaBtn: '🚀 Try Free', contactBtn: '📩 Contact Us',
+    featTitle: 'Why Aivexa Studio?', featSub: 'Everything you need to create professional video content',
+    f1t:'Text to Video', f1d:'Write a description and watch AI transform it into a cinematic professional video',
+    f2t:'Image to Video', f2d:'Upload any image and bring it to life with stunning visual effects',
+    f3t:'AI Prompt Enhancement', f3d:'AI automatically improves your description for the best possible result',
+    f4t:'Explore Creations', f4d:'Discover videos from creators worldwide in an interactive feed',
+    f5t:'Fast & Easy', f5d:'Video ready in minutes — no technical experience needed',
+    f6t:'Mobile First', f6d:'Perfect mobile experience like TikTok and Instagram Reels',
+    privTitle:'Privacy Policy', privDate:'Last updated: April 2026',
+    privContent:`<h2>1. Information We Collect</h2><ul><li>Account info: name, email, profile picture from Google</li><li>Content you create: texts, images, and videos</li><li>Usage data: video count, credits, creation date</li><li>Interaction data: likes and views</li></ul><h2>2. How We Use Your Information</h2><ul><li>Provide AI video generation service</li><li>Manage your account and credits</li><li>Improve service quality</li><li>Ensure content policy compliance</li></ul><h2>3. Information Sharing</h2><p>We do not sell your data. We may share with service providers (Supabase, xAI) and legal authorities when required.</p><h2>4. Data Retention</h2><p>We retain your data while your account is active. You can delete your account from settings and all data will be removed within 30 days.</p><h2>5. Security</h2><p>We use SSL/TLS encryption to protect your data.</p><h2>6. Your Rights</h2><ul><li>Access and correct your data</li><li>Delete your account and all data</li><li>Export your data</li></ul><h2>7. Contact</h2><p>For inquiries: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>`,
+    termsTitle:'Terms of Service', termsDate:'Last updated: April 2026',
+    termsContent:`<h2>1. Acceptance</h2><p>By using Aivexa Studio you agree to these terms.</p><h2>2. Eligibility</h2><p>You must be 17 years or older to use this app.</p><h2>3. Account</h2><ul><li>Sign-in via Google OAuth only</li><li>One account per user</li><li>You are responsible for account security</li></ul><h2>4. Credits System</h2><ul><li>50 free welcome credits</li><li>5-second video = 10 credits</li><li>2 videos/day for free users</li><li>Credits refunded on failed generation</li></ul><h2>5. Intellectual Property</h2><p>Videos you create belong to you.</p><h2>6. Termination</h2><p>We reserve the right to suspend accounts that violate these terms.</p><h2>7. Contact</h2><p><a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>`,
+    contentTitle:'Content Policy', contentDate:'Last updated: April 2026',
+    contentContent:`<h2>Prohibited Content</h2><ul><li>Explicit or suggestive sexual content</li><li>Excessive violence or disturbing content</li><li>Hate speech or discrimination</li><li>Misleading or false information</li><li>Intellectual property violations</li><li>Terrorist or extremist content</li></ul><h2>Allowed Content</h2><ul><li>Nature, artistic, and creative scenes</li><li>Educational and cultural content</li><li>Science fiction and creative works</li></ul><h2>Review System</h2><p>All Explore videos are manually reviewed before publishing.</p><h2>Reporting</h2><p>To report content: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p><h2>Penalties</h2><ul><li>First warning: Content removal</li><li>Second warning: Temporary suspension</li><li>Repeated violations: Permanent ban</li></ul>`,
+    flHome:'Home', flPrivacy:'Privacy Policy', flTerms:'Terms of Service',
+    flContent:'Content Policy', flSupport:'Support',
   }
 };
 
-function toggleLang() {
-  currentLang = currentLang === 'ar' ? 'en' : 'ar';
-  document.documentElement.lang = currentLang;
-  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-  document.getElementById('langBtn').textContent = 
-    currentLang === 'ar' ? 'EN' : 'AR';
+let lang = 'ar';
+
+function applyLang() {
+  const t = T[lang];
+  const html = document.documentElement;
+  html.lang = t.lang;
+  html.dir = t.dir;
+  document.body.className = t.bodyClass;
+  document.getElementById('langBtn').textContent = t.btnLang;
+
+  // Nav
+  document.getElementById('nav-home').textContent = t.navHome;
+  document.getElementById('nav-privacy').textContent = t.navPrivacy;
+  document.getElementById('nav-terms').textContent = t.navTerms;
+  document.getElementById('nav-content').textContent = t.navContent;
+  document.getElementById('nav-support').textContent = t.navSupport;
+
+  // Hero
+  document.getElementById('badge').textContent = t.badge;
+  document.getElementById('heroTitle').innerHTML = t.heroTitle;
+  document.getElementById('heroSub').textContent = t.heroSub;
+  document.getElementById('ctaBtn').textContent = t.ctaBtn;
+  document.getElementById('contactBtn').textContent = t.contactBtn;
+
+  // Features
+  document.getElementById('featTitle').textContent = t.featTitle;
+  document.getElementById('featSub').textContent = t.featSub;
+  ['f1t','f2t','f3t','f4t','f5t','f6t'].forEach(id => {
+    document.getElementById(id).textContent = t[id];
+  });
+  ['f1d','f2d','f3d','f4d','f5d','f6d'].forEach(id => {
+    document.getElementById(id).textContent = t[id];
+  });
+
+  // Legal pages
+  document.getElementById('privTitle').textContent = t.privTitle;
+  document.getElementById('privDate').textContent = t.privDate;
+  document.getElementById('privContent').innerHTML = t.privContent;
+
+  document.getElementById('termsTitle').textContent = t.termsTitle;
+  document.getElementById('termsDate').textContent = t.termsDate;
+  document.getElementById('termsContent').innerHTML = t.termsContent;
+
+  document.getElementById('contentTitle').textContent = t.contentTitle;
+  document.getElementById('contentDate').textContent = t.contentDate;
+  document.getElementById('contentContent').innerHTML = t.contentContent;
+
+  // Footer
+  document.getElementById('fl-home').textContent = t.flHome;
+  document.getElementById('fl-privacy').textContent = t.flPrivacy;
+  document.getElementById('fl-terms').textContent = t.flTerms;
+  document.getElementById('fl-content').textContent = t.flContent;
+  document.getElementById('fl-support').textContent = t.flSupport;
 }
+
+function toggleLang() {
+  lang = lang === 'ar' ? 'en' : 'ar';
+  applyLang();
+}
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page + '-page').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// Auto-detect browser language
+const bl = (navigator.language || 'ar').toLowerCase();
+lang = bl.startsWith('ar') ? 'ar' : 'en';
+if (lang === 'en') applyLang();
+
+// Handle hash
+const hash = window.location.hash.replace('#','');
+if (['privacy','terms','content'].includes(hash)) showPage(hash);
 </script>
 </body>
 </html>

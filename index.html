@@ -1,912 +1,1572 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aivexa Studio AI — AI Video Generator</title>
-  <meta name="description" content="Transform your ideas into cinematic AI videos in seconds. Powered by xAI Grok Imagine.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #07050e;
-      --surface: #0f0c1a;
-      --surface2: #161228;
-      --border: rgba(139,92,246,0.14);
-      --purple: #8B5CF6;
-      --purple-d: #6D28D9;
-      --purple-l: #A78BFA;
-      --text: #f4f2ff;
-      --text-m: rgba(244,242,255,0.62);
-      --text-f: rgba(244,242,255,0.32);
-      --green: #4ade80;
-      --red: #f87171;
-      --gold: #FBBF24;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.65;}
-    body.en{font-family:'Inter',sans-serif;}
-    body.ar{font-family:'Cairo',sans-serif;}
-    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5;}
-    .orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;}
-    .o1{width:500px;height:500px;background:radial-gradient(circle,rgba(109,40,217,.18),transparent 70%);top:-120px;right:-120px;animation:fl 9s ease-in-out infinite;}
-    .o2{width:380px;height:380px;background:radial-gradient(circle,rgba(139,92,246,.11),transparent 70%);bottom:15%;left:-80px;animation:fl 11s ease-in-out infinite reverse;}
-    @keyframes fl{0%,100%{transform:translateY(0);}50%{transform:translateY(-28px);}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aivexa Studio AI — Generate cinematic AI videos from text or images in seconds. Available on Google Play.">
+<meta name="keywords" content="AI video generator, text to video, image to video, Aivexa Studio, Android app, مولد فيديو">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Aivexa Studio AI — AI Video Generator">
+<meta property="og:description" content="Transform your ideas into cinematic AI-generated videos in seconds. Available on Google Play.">
+<meta property="og:url" content="https://sdggbgds-arch.github.io/aivexa-studio/">
+<meta property="og:type" content="website">
+<title>Aivexa Studio AI — مولّد الفيديو بالذكاء الاصطناعي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* =============================================
+   RESET & CSS VARIABLES
+   ============================================= */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,5,14,.88);backdrop-filter:blur(22px);border-bottom:1px solid var(--border);}
-    .logo{font-size:19px;font-weight:900;background:linear-gradient(135deg,#A78BFA,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;text-decoration:none;}
-    .nav-links{display:flex;gap:2px;list-style:none;flex-wrap:wrap;}
-    .nav-links a{color:var(--text-m);text-decoration:none;font-size:12px;font-weight:600;padding:5px 11px;border-radius:20px;transition:all .2s;cursor:pointer;white-space:nowrap;}
-    .nav-links a:hover{color:var(--text);background:rgba(139,92,246,.1);}
-    .nav-r{display:flex;gap:8px;align-items:center;}
-    .lang-btn{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);color:var(--purple-l);font-size:11px;font-weight:800;padding:5px 13px;border-radius:20px;cursor:pointer;transition:all .2s;letter-spacing:.5px;}
-    .lang-btn:hover{background:rgba(139,92,246,.2);}
+:root {
+  --bg:        #0a0a0f;
+  --surface:   #0f0d1a;
+  --surface2:  #15121f;
+  --border:    rgba(139,92,246,.14);
+  --purple:    #8b5cf6;
+  --purple-d:  #7c3aed;
+  --purple-l:  #a78bfa;
+  --text:      #eeecff;
+  --text-m:    rgba(238,236,255,.60);
+  --text-f:    rgba(238,236,255,.30);
+  --green:     #4ade80;
+  --red:       #f87171;
+  --gold:      #fbbf24;
+  --radius:    16px;
+  --transition: .26s ease;
+}
 
-    /* PAGES */
-    .page{display:none;min-height:100vh;position:relative;z-index:1;}
-    .page.active{display:block;}
+html { scroll-behavior: smooth; }
 
-    /* HERO */
-    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 24px 70px;}
-    .badge{display:inline-flex;align-items:center;gap:7px;padding:5px 15px;border-radius:20px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.3);font-size:11px;font-weight:700;color:var(--purple-l);margin-bottom:22px;animation:fup .6s ease both;}
-    h1.hero-t{font-size:clamp(30px,7vw,66px);font-weight:900;line-height:1.08;margin-bottom:18px;animation:fup .6s ease .1s both;}
-    .grad{background:linear-gradient(135deg,#A78BFA,#8B5CF6,#6D28D9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .hero-sub{font-size:clamp(14px,2.2vw,18px);color:var(--text-m);max-width:520px;margin-bottom:38px;animation:fup .6s ease .2s both;}
-    .btns{display:flex;gap:11px;flex-wrap:wrap;justify-content:center;animation:fup .6s ease .3s both;}
-    .btn-p{padding:13px 30px;border-radius:13px;background:linear-gradient(135deg,#6D28D9,#8B5CF6);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;box-shadow:0 8px 30px rgba(139,92,246,.32);transition:all .2s;}
-    .btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 38px rgba(139,92,246,.48);}
-    .btn-s{padding:13px 30px;border-radius:13px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.25);color:var(--purple-l);font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .2s;}
-    .btn-s:hover{background:rgba(139,92,246,.15);}
-    @keyframes fup{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+body {
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.7;
+  /* Arabic font by default */
+  font-family: 'Tajawal', system-ui, sans-serif;
+}
+/* Switch to Inter when English mode is active */
+body.lang-en { font-family: 'Inter', system-ui, sans-serif; }
 
-    /* FEATURES */
-    .section{padding:80px 24px;max-width:1080px;margin:0 auto;}
-    .sec-hd{text-align:center;font-size:28px;font-weight:900;margin-bottom:10px;}
-    .sec-sub{text-align:center;color:var(--text-m);font-size:14px;margin-bottom:44px;}
-    .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px;transition:all .3s;}
-    .card:hover{border-color:rgba(139,92,246,.36);transform:translateY(-3px);box-shadow:0 10px 36px rgba(139,92,246,.09);}
-    .card-icon{font-size:28px;margin-bottom:12px;}
-    .card-t{font-size:15px;font-weight:800;margin-bottom:7px;}
-    .card-d{font-size:13px;color:var(--text-m);line-height:1.65;}
+/* Subtle noise overlay — purely decorative */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");
+  opacity: .5;
+}
 
-    /* PRICING */
-    .pricing-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;max-width:900px;margin:0 auto;}
-    .plan{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;display:flex;flex-direction:column;}
-    .plan.featured{border-color:rgba(139,92,246,.5);background:linear-gradient(160deg,rgba(109,40,217,.12),rgba(139,92,246,.06));}
-    .plan-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6D28D9,#8B5CF6);color:#fff;font-size:10px;font-weight:800;padding:3px 14px;border-radius:20px;white-space:nowrap;}
-    .plan-name{font-size:18px;font-weight:900;margin-bottom:5px;}
-    .plan-price{font-size:34px;font-weight:900;color:var(--purple-l);line-height:1;}
-    .plan-price span{font-size:14px;font-weight:600;color:var(--text-m);}
-    .plan-desc{font-size:12px;color:var(--text-m);margin:8px 0 18px;}
-    .plan-features{list-style:none;flex:1;}
-    .plan-features li{font-size:13px;color:var(--text-m);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:8px;}
-    .plan-features li:last-child{border:none;}
-    .plan-features li::before{content:'✓';color:var(--green);font-weight:900;font-size:11px;flex-shrink:0;}
-    .plan-features li.no::before{content:'✗';color:var(--text-f);}
-    .plan-btn{margin-top:20px;width:100%;padding:12px;border-radius:13px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .2s;}
-    .plan-btn.free-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text-m);}
-    .plan-btn.pro-btn{background:linear-gradient(135deg,#6D28D9,#8B5CF6);color:#fff;box-shadow:0 6px 20px rgba(139,92,246,.28);}
-    .plan-btn.ultra-btn{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;box-shadow:0 6px 20px rgba(124,58,237,.28);}
+/* =============================================
+   BACKGROUND ORBS — corners only, small, no empty space
+   ============================================= */
+.orb {
+  position: fixed; border-radius: 50%;
+  filter: blur(80px); pointer-events: none; z-index: 0;
+}
+.orb-1 {
+  width: 340px; height: 340px;
+  background: radial-gradient(circle, rgba(124,58,237,.22), transparent 70%);
+  top: -90px; right: -90px;
+  animation: floatOrb 10s ease-in-out infinite;
+}
+.orb-2 {
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(139,92,246,.14), transparent 70%);
+  bottom: 8%; left: -70px;
+  animation: floatOrb 13s ease-in-out infinite reverse;
+}
+.orb-3 {
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(168,139,250,.10), transparent 70%);
+  bottom: 28%; right: 4%;
+  animation: floatOrb 11s ease-in-out infinite 2s;
+}
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-20px); }
+}
 
-    /* CREDITS TABLE */
-    .credits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:700px;margin:0 auto;}
-    .credit-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;text-align:center;position:relative;}
-    .credit-card.pop{border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.04);}
-    .credit-pop-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#FBBF24;color:#111;font-size:9px;font-weight:900;padding:3px 12px;border-radius:20px;}
-    .credit-amt{font-size:28px;font-weight:900;color:var(--purple-l);}
-    .credit-label{font-size:11px;color:var(--text-m);margin:3px 0 8px;}
-    .credit-price{font-size:20px;font-weight:900;}
+/* =============================================
+   NAVBAR
+   ============================================= */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 600;
+  height: 58px;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+  padding: 0 24px;
+  background: rgba(10,10,15,.88);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border-bottom: 1px solid var(--border);
+}
 
-    /* FOOTER */
-    footer{border-top:1px solid var(--border);padding:36px 24px;text-align:center;position:relative;z-index:1;}
-    .footer-logo{font-size:20px;font-weight:900;background:linear-gradient(135deg,#A78BFA,#6D28D9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px;}
-    .footer-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
-    .footer-links a{color:var(--text-m);text-decoration:none;font-size:12px;font-weight:600;transition:color .2s;cursor:pointer;}
-    .footer-links a:hover{color:var(--purple-l);}
-    .footer-copy{font-size:11px;color:var(--text-f);}
-    .footer-dev{font-size:11px;color:var(--text-f);margin-top:4px;}
+.nav-logo {
+  font-size: 17px; font-weight: 700; cursor: pointer;
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  white-space: nowrap; flex-shrink: 0; text-decoration: none;
+  user-select: none;
+}
 
-    /* LEGAL */
-    .legal-wrap{padding:100px 24px 60px;max-width:760px;margin:0 auto;}
-    .legal-title{font-size:28px;font-weight:900;margin-bottom:5px;}
-    .legal-meta{font-size:11px;color:var(--text-f);margin-bottom:32px;line-height:1.8;}
-    .legal-body h2{font-size:16px;font-weight:800;color:var(--purple-l);margin:28px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--border);}
-    .legal-body h3{font-size:14px;font-weight:700;color:var(--text);margin:18px 0 6px;}
-    .legal-body p{font-size:13px;color:var(--text-m);line-height:1.82;margin-bottom:10px;}
-    .legal-body ul{padding-left:20px;margin-bottom:10px;}
-    body.ar .legal-body ul{padding-left:0;padding-right:20px;}
-    .legal-body li{font-size:13px;color:var(--text-m);line-height:1.82;margin-bottom:4px;}
-    .legal-body a{color:var(--purple-l);}
-    .legal-body table{width:100%;border-collapse:collapse;margin:14px 0;}
-    .legal-body th{background:var(--surface2);padding:9px 12px;font-size:12px;font-weight:700;text-align:left;border:1px solid var(--border);}
-    body.ar .legal-body th{text-align:right;}
-    .legal-body td{padding:8px 12px;font-size:12px;color:var(--text-m);border:1px solid var(--border);vertical-align:top;}
-    .highlight-box{background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.2);border-radius:12px;padding:14px 18px;margin:14px 0;}
-    .highlight-box p{margin:0;font-size:12px;}
-    .warn-box{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:12px;padding:14px 18px;margin:14px 0;}
-    .warn-box p{margin:0;font-size:12px;color:#FBBF24;}
+/* Desktop nav links — hidden on mobile */
+.nav-links { display: flex; gap: 2px; list-style: none; }
+.nav-links a {
+  color: var(--text-m); font-size: 12px; font-weight: 600;
+  padding: 5px 11px; border-radius: 20px;
+  cursor: pointer; transition: all var(--transition);
+  text-decoration: none; white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+.nav-links a:hover { color: var(--text); background: rgba(139,92,246,.10); }
+.nav-links a.active { color: var(--purple-l); border-bottom-color: var(--purple-l); }
 
-    @media(max-width:640px){.nav-links{display:none;}.btns{flex-direction:column;align-items:center;}}
-  </style>
+.nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+.lang-btn {
+  background: rgba(139,92,246,.12);
+  border: 1px solid rgba(139,92,246,.28);
+  color: var(--purple-l);
+  font-size: 11px; font-weight: 700;
+  padding: 5px 13px; border-radius: 20px;
+  cursor: pointer; transition: all var(--transition);
+  letter-spacing: .4px; white-space: nowrap;
+}
+.lang-btn:hover { background: rgba(139,92,246,.22); }
+
+/* Hamburger button — shown only on mobile */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 4px; background: none; border: none;
+  flex-shrink: 0;
+}
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--text-m); border-radius: 2px;
+  transition: all .3s;
+}
+/* Animated X state */
+.hamburger.is-open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.is-open span:nth-child(2) { opacity: 0; }
+.hamburger.is-open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+/* Mobile dropdown menu */
+.mobile-nav {
+  display: none;
+  position: fixed; top: 58px; left: 0; right: 0; z-index: 500;
+  background: rgba(10,10,15,.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px 16px;
+}
+.mobile-nav.open { display: block; }
+.mobile-nav a {
+  display: block; padding: 11px 0;
+  color: var(--text-m); font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  transition: color var(--transition);
+}
+.mobile-nav a:last-child { border-bottom: none; }
+.mobile-nav a:hover { color: var(--purple-l); }
+
+/* =============================================
+   PAGE SYSTEM — fade in/out
+   ============================================= */
+.page { display: none; position: relative; z-index: 1; }
+.page.active {
+  display: block;
+  animation: pageFade .28s ease both;
+}
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   HERO SECTION
+   Uses padding only — NO min-height to avoid empty space
+   ============================================= */
+.hero {
+  padding: 140px 24px 100px;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 24px;
+  background: rgba(139,92,246,.10);
+  border: 1px solid rgba(139,92,246,.28);
+  font-size: 12px; font-weight: 600; color: var(--purple-l);
+  margin-bottom: 24px;
+  animation: fadeUp .6s ease both;
+}
+.hero-badge svg { width: 13px; height: 13px; fill: var(--purple-l); flex-shrink: 0; }
+
+h1.hero-title {
+  font-size: clamp(28px, 6.5vw, 64px);
+  font-weight: 900; line-height: 1.08;
+  margin-bottom: 20px;
+  animation: fadeUp .6s ease .1s both;
+}
+.grad {
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 55%, #6d28d9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--text-m); max-width: 540px;
+  margin: 0 auto 36px;
+  animation: fadeUp .6s ease .18s both;
+}
+.hero-btns {
+  display: flex; gap: 12px;
+  justify-content: center; flex-wrap: wrap;
+  animation: fadeUp .6s ease .26s both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   BUTTONS
+   ============================================= */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; border-radius: 13px;
+  background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 50%, #7c3aed 100%);
+  background-size: 200% 200%;
+  animation: shimmerBtn 4s ease infinite;
+  color: #fff; font-size: 14px; font-weight: 700;
+  text-decoration: none; border: none; cursor: pointer;
+  box-shadow: 0 6px 28px rgba(109,40,217,.38);
+  transition: transform var(--transition), box-shadow var(--transition);
+  white-space: nowrap;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 36px rgba(109,40,217,.52);
+}
+@keyframes shimmerBtn {
+  0%,100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; border-radius: 13px;
+  background: rgba(139,92,246,.09);
+  border: 1px solid rgba(139,92,246,.26);
+  color: var(--purple-l); font-size: 14px; font-weight: 700;
+  text-decoration: none; cursor: pointer;
+  transition: all var(--transition); white-space: nowrap;
+}
+.btn-secondary:hover { background: rgba(139,92,246,.18); }
+
+/* =============================================
+   SECTIONS (shared layout)
+   ============================================= */
+.section       { padding: 80px 24px; max-width: 1080px; margin: 0 auto; }
+.section-tight { padding: 60px 24px; max-width: 1080px; margin: 0 auto; }
+
+.sec-title { text-align: center; font-size: clamp(22px, 4vw, 32px); font-weight: 900; margin-bottom: 10px; }
+.sec-sub   { text-align: center; color: var(--text-m); font-size: 14px; margin-bottom: 44px; }
+
+hr.divider { border: none; border-top: 1px solid var(--border); }
+
+/* =============================================
+   FEATURE CARDS (3×2 grid)
+   ============================================= */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.feat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px;
+  transition: all .28s;
+}
+.feat-card:hover {
+  border-color: rgba(139,92,246,.36);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(109,40,217,.10);
+}
+.feat-icon  { font-size: 26px; margin-bottom: 12px; }
+.feat-title { font-size: 15px; font-weight: 800; margin-bottom: 7px; }
+.feat-desc  { font-size: 13px; color: var(--text-m); line-height: 1.7; }
+
+/* =============================================
+   PRICING CARDS
+   ============================================= */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px; max-width: 880px; margin: 0 auto;
+}
+.plan-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 28px 24px;
+  position: relative; display: flex; flex-direction: column;
+  transition: border-color var(--transition);
+}
+.plan-card:hover { border-color: rgba(139,92,246,.32); }
+.plan-card.featured {
+  border-color: rgba(139,92,246,.44);
+  background: linear-gradient(160deg, rgba(109,40,217,.12), rgba(139,92,246,.06));
+}
+.plan-badge {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff; font-size: 10px; font-weight: 800;
+  padding: 3px 14px; border-radius: 20px; white-space: nowrap;
+}
+.plan-name      { font-size: 17px; font-weight: 900; margin-bottom: 4px; }
+.plan-price     { font-size: 32px; font-weight: 900; color: var(--purple-l); line-height: 1; }
+.plan-period    { font-size: 13px; font-weight: 500; color: var(--text-m); }
+.plan-tagline   { font-size: 12px; color: var(--text-m); margin: 8px 0 18px; }
+.plan-feats     { list-style: none; flex: 1; }
+.plan-feats li  {
+  font-size: 12.5px; color: var(--text-m);
+  padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.04);
+  display: flex; align-items: center; gap: 8px;
+}
+.plan-feats li:last-child { border: none; }
+.plan-feats li::before { content: '✓'; color: var(--green); font-weight: 900; font-size: 11px; flex-shrink: 0; }
+.plan-feats li.no::before { content: '✗'; color: var(--text-f); }
+.plan-btn {
+  margin-top: 20px; width: 100%;
+  padding: 11px; border-radius: 12px;
+  font-size: 13px; font-weight: 700;
+  border: none; cursor: pointer;
+  transition: all .22s;
+  text-align: center; text-decoration: none; display: block;
+}
+.btn-free  { background: var(--surface2); color: var(--text-m); border: 1px solid var(--border); }
+.btn-free:hover  { border-color: rgba(139,92,246,.3); color: var(--purple-l); }
+.btn-pro   { background: linear-gradient(135deg,#7c3aed,#8b5cf6); color:#fff; box-shadow:0 4px 18px rgba(124,58,237,.3); }
+.btn-pro:hover   { box-shadow: 0 6px 24px rgba(124,58,237,.5); }
+.btn-ultra { background: linear-gradient(135deg,#5b21b6,#7c3aed); color:#fff; box-shadow:0 4px 18px rgba(91,33,182,.3); }
+.btn-ultra:hover { box-shadow: 0 6px 24px rgba(91,33,182,.5); }
+.pricing-note { text-align: center; font-size: 11.5px; color: var(--text-f); margin-top: 18px; }
+
+/* =============================================
+   FULL PRICING PAGE (page 2)
+   ============================================= */
+.pricing-page-wrap { max-width: 820px; margin: 0 auto; padding: 100px 24px 70px; }
+.pricing-page-title { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+.pricing-page-meta  { font-size: 13px; color: var(--text-m); margin-bottom: 36px; line-height: 1.6; }
+
+/* =============================================
+   DATA TABLES
+   ============================================= */
+.data-table { width: 100%; border-collapse: collapse; margin: 14px 0 24px; font-size: 13px; }
+.data-table th {
+  background: var(--surface2); padding: 9px 14px;
+  font-weight: 700; text-align: start;
+  border: 1px solid rgba(255,255,255,.07); color: var(--text);
+}
+.data-table td {
+  padding: 9px 14px; border: 1px solid rgba(255,255,255,.05);
+  color: var(--text-m); vertical-align: top; line-height: 1.65;
+}
+.data-table tr:hover td { background: rgba(139,92,246,.03); }
+
+/* =============================================
+   LEGAL PAGES
+   ============================================= */
+.legal-wrap { max-width: 780px; margin: 0 auto; padding: 100px 24px 70px; }
+.legal-wrap h1 { font-size: 28px; font-weight: 900; margin-bottom: 5px; }
+.legal-meta {
+  font-size: 11.5px; color: var(--text-f);
+  margin-bottom: 36px; line-height: 1.9;
+}
+.legal-meta a { color: var(--purple-l); text-decoration: none; }
+.legal-note-en {
+  background: rgba(139,92,246,.07);
+  border: 1px solid rgba(139,92,246,.18);
+  border-radius: 10px; padding: 11px 16px;
+  font-size: 12px; color: var(--text-m);
+  margin-bottom: 28px;
+}
+.legal-body h2 {
+  font-size: 16px; font-weight: 800; color: var(--purple-l);
+  margin: 30px 0 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
+.legal-body h3 { font-size: 14px; font-weight: 700; color: var(--text); margin: 18px 0 7px; }
+.legal-body p   { font-size: 13.5px; color: var(--text-m); margin-bottom: 11px; line-height: 1.82; }
+.legal-body ul,
+.legal-body ol  { padding-inline-start: 20px; margin-bottom: 12px; }
+.legal-body li  { font-size: 13.5px; color: var(--text-m); line-height: 1.82; margin-bottom: 5px; }
+.legal-body a   { color: var(--purple-l); text-decoration: none; }
+.legal-body a:hover { text-decoration: underline; }
+.info-box {
+  background: rgba(139,92,246,.07);
+  border: 1px solid rgba(139,92,246,.18);
+  border-radius: 10px; padding: 13px 16px; margin: 14px 0;
+  font-size: 13px; color: var(--text-m);
+}
+.caps-block {
+  font-size: 12px; color: var(--text-m); line-height: 1.8;
+  background: var(--surface2); border-radius: 10px;
+  padding: 14px 16px; margin: 12px 0;
+}
+
+/* =============================================
+   SUPPORT PAGE
+   ============================================= */
+.support-wrap { max-width: 800px; margin: 0 auto; padding: 100px 24px 70px; }
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px; margin-bottom: 50px;
+}
+.contact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px; text-align: center;
+  transition: border-color var(--transition);
+}
+.contact-card:hover { border-color: rgba(139,92,246,.32); }
+.contact-icon  { font-size: 28px; margin-bottom: 10px; }
+.contact-title { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+.contact-desc  { font-size: 12px; color: var(--text-m); margin-bottom: 12px; line-height: 1.6; }
+.contact-link  {
+  display: inline-block; font-size: 12px;
+  color: var(--purple-l); font-weight: 600; text-decoration: none;
+}
+.contact-link:hover { text-decoration: underline; }
+
+/* FAQ accordion */
+.faq-item { border-bottom: 1px solid rgba(255,255,255,.06); padding: 16px 0; }
+.faq-q {
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; display: flex;
+  justify-content: space-between; align-items: center; gap: 12px;
+  user-select: none;
+}
+.faq-q .faq-icon { font-size: 18px; color: var(--purple-l); flex-shrink: 0; transition: transform .22s; }
+.faq-q.open .faq-icon { transform: rotate(45deg); }
+.faq-a { display: none; font-size: 13px; color: var(--text-m); line-height: 1.78; padding-top: 10px; }
+.faq-a.open { display: block; }
+
+/* Data deletion box */
+.delete-box {
+  background: rgba(248,113,113,.06);
+  border: 1px solid rgba(248,113,113,.18);
+  border-radius: var(--radius);
+  padding: 24px; margin-top: 40px;
+}
+.delete-box h3 { color: var(--red); font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+
+/* =============================================
+   FOOTER
+   ============================================= */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 42px 24px;
+  position: relative; z-index: 1;
+}
+.footer-inner { max-width: 1080px; margin: 0 auto; text-align: center; }
+.footer-logo {
+  font-size: 20px; font-weight: 900; margin-bottom: 5px;
+  background: linear-gradient(135deg, #a78bfa, #6d28d9);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-tagline { font-size: 12px; color: var(--text-m); margin-bottom: 20px; }
+.footer-links  { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+.footer-links a {
+  color: var(--text-m); font-size: 12px; font-weight: 600;
+  text-decoration: none; cursor: pointer; transition: color var(--transition);
+}
+.footer-links a:hover { color: var(--purple-l); }
+.footer-play {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 8px 18px;
+  color: var(--text); font-size: 12px; font-weight: 600;
+  text-decoration: none; margin: 10px 0; transition: border-color var(--transition);
+}
+.footer-play:hover { border-color: rgba(139,92,246,.3); }
+.footer-copy { font-size: 11px; color: var(--text-f); margin-top: 6px; }
+.footer-dev  { font-size: 10.5px; color: var(--text-f); margin-top: 3px; }
+
+/* =============================================
+   BACK TO TOP BUTTON
+   ============================================= */
+#backToTop {
+  position: fixed; bottom: 24px; right: 24px; z-index: 400;
+  /* In RTL right stays right — position is the same */
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(124,58,237,.82);
+  border: 1px solid rgba(139,92,246,.4);
+  color: #fff; font-size: 16px;
+  cursor: pointer; display: none;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition);
+  box-shadow: 0 4px 16px rgba(109,40,217,.3);
+}
+#backToTop.visible { display: flex; }
+#backToTop:hover { background: rgba(124,58,237,1); transform: translateY(-2px); }
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 720px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .features-grid,
+  .pricing-grid,
+  .contact-grid { grid-template-columns: 1fr; }
+  .hero-btns { flex-direction: column; align-items: center; }
+}
+@media (max-width: 480px) {
+  .hero { padding: 120px 18px 80px; }
+  .section, .section-tight { padding: 60px 18px; }
+  .legal-wrap, .pricing-page-wrap, .support-wrap { padding: 90px 18px 50px; }
+}
+</style>
 </head>
-<body class="en">
+<body>
 
-<div class="orb o1"></div>
-<div class="orb o2"></div>
+<!-- === DECORATIVE ORBS (corners only, small) === -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 
-<!-- NAV -->
+<!-- =============================================
+     FIXED NAVBAR
+     ============================================= -->
 <nav>
-  <a class="logo" onclick="showPage('home')">Aivexa Studio AI</a>
+  <span class="nav-logo" onclick="navigate('home')">Aivexa Studio AI</span>
+
   <ul class="nav-links">
-    <li><a onclick="showPage('home')" id="nl-home">Home</a></li>
-    <li><a onclick="showPage('pricing')" id="nl-pricing">Pricing</a></li>
-    <li><a onclick="showPage('privacy')" id="nl-privacy">Privacy Policy</a></li>
-    <li><a onclick="showPage('terms')" id="nl-terms">Terms of Service</a></li>
-    <li><a onclick="showPage('content')" id="nl-content">Content Policy</a></li>
-    <li><a href="mailto:aivexastudio@gmail.com" id="nl-support">Support</a></li>
+    <li><a id="nl-home"    onclick="navigate('home')">الرئيسية</a></li>
+    <li><a id="nl-pricing" onclick="navigate('pricing')">الأسعار</a></li>
+    <li><a id="nl-privacy" onclick="navigate('privacy')">الخصوصية</a></li>
+    <li><a id="nl-terms"   onclick="navigate('terms')">الشروط</a></li>
+    <li><a id="nl-content" onclick="navigate('content')">المحتوى</a></li>
+    <li><a id="nl-support" onclick="navigate('support')">الدعم</a></li>
   </ul>
-  <div class="nav-r">
-    <button class="lang-btn" onclick="toggleLang()" id="langBtn">عربي</button>
+
+  <div class="nav-right">
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">English</button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════════
-     HOME PAGE
-═══════════════════════════════════ -->
-<div id="home-page" class="page active">
+<!-- MOBILE DROPDOWN MENU -->
+<div class="mobile-nav" id="mobileNav">
+  <a id="ml-home"    onclick="navigate('home');   closeMenu()">الرئيسية</a>
+  <a id="ml-pricing" onclick="navigate('pricing');closeMenu()">الأسعار</a>
+  <a id="ml-privacy" onclick="navigate('privacy');closeMenu()">سياسة الخصوصية</a>
+  <a id="ml-terms"   onclick="navigate('terms');  closeMenu()">شروط الاستخدام</a>
+  <a id="ml-content" onclick="navigate('content');closeMenu()">سياسة المحتوى</a>
+  <a id="ml-support" onclick="navigate('support');closeMenu()">مركز الدعم</a>
+</div>
 
-  <section class="hero">
-    <div class="badge" id="h-badge">✨ Powered by xAI Grok Imagine</div>
-    <h1 class="hero-t" id="h-title">Turn Your Ideas<br>Into <span class="grad">AI Videos</span></h1>
-    <p class="hero-sub" id="h-sub">Create cinematic-quality AI-generated videos in seconds. Type a description, upload an image, and watch your vision come to life — powered by the world's fastest AI video engine.</p>
-    <div class="btns">
-      <a href="https://aivexa-studio-ai-app-da65.bolt.host" target="_blank" class="btn-p" id="h-cta">🚀 Try Free Now</a>
-      <a onclick="showPage('pricing')" class="btn-s" id="h-plans">View Plans</a>
+<!-- =============================================
+     PAGE 1 — HOME
+     ============================================= -->
+<div id="page-home" class="page active">
+
+  <!-- HERO — padding-based height, never min-height:100vh -->
+  <div class="hero">
+    <div class="hero-badge">
+      <!-- Google Play triangle SVG icon -->
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M3.18 23.76c.35.2.76.2 1.09-.02l18-11a1 1 0 0 0 0-1.73l-18-11A1 1 0 0 0 2.73.87v22.26a1 1 0 0 0 .45.63z"/>
+      </svg>
+      <span id="h-badge">متوفر الآن على Google Play</span>
     </div>
-  </section>
 
-  <div class="section">
-    <div class="sec-hd" id="f-title">Everything You Need to Create</div>
-    <p class="sec-sub" id="f-sub">Professional AI video generation with zero technical skills required</p>
-    <div class="grid3">
-      <div class="card"><div class="card-icon">🎬</div><div class="card-t" id="f1t">Text to Video</div><div class="card-d" id="f1d">Describe your scene and Aivexa Studio AI generates a cinematic video from your words in seconds.</div></div>
-      <div class="card"><div class="card-icon">🖼️</div><div class="card-t" id="f2t">Image to Video</div><div class="card-d" id="f2d">Upload any photo and bring it to life with smooth, realistic motion powered by xAI Aurora.</div></div>
-      <div class="card"><div class="card-icon">✨</div><div class="card-t" id="f3t">AI Prompt Enhancement</div><div class="card-d" id="f3d">Our AI automatically improves your prompt for maximum visual quality and creative impact.</div></div>
-      <div class="card"><div class="card-icon">🌍</div><div class="card-t" id="f4t">Explore Feed</div><div class="card-d" id="f4d">Discover and share AI creations in a TikTok-style feed. Like, comment, and get inspired by the community.</div></div>
-      <div class="card"><div class="card-icon">⚡</div><div class="card-t" id="f5t">Ultra-Fast Generation</div><div class="card-d" id="f5d">Generate 5–15 second videos at up to 720p quality. Our smart queue system ensures smooth performance for all users.</div></div>
-      <div class="card"><div class="card-icon">📱</div><div class="card-t" id="f6t">Mobile-First Design</div><div class="card-d" id="f6d">Designed specifically for mobile. A native Android app experience optimized for phones and tablets.</div></div>
+    <h1 class="hero-title" id="h-title">
+      أنشئ فيديوهاتك<br>بالذكاء الاصطناعي <span class="grad">في ثوانٍ</span>
+    </h1>
+
+    <p class="hero-sub" id="h-sub">
+      حوّل أفكارك إلى فيديوهات سينمائية احترافية. اكتب وصفاً أو ارفع صورة وشاهد إبداعك يتحول إلى واقع مذهل.
+    </p>
+
+    <div class="hero-btns">
+      <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" class="btn-primary" id="h-cta">
+        🚀 جرّب مجاناً الآن
+      </a>
+      <a onclick="navigate('pricing')" class="btn-secondary" id="h-plans">
+        عرض الخطط
+      </a>
     </div>
   </div>
 
-  <div class="section" style="padding-top:0;">
-    <div class="sec-hd" id="p-title2">Simple, Transparent Pricing</div>
-    <p class="sec-sub" id="p-sub2">Start free. Upgrade when you need more.</p>
-    <div class="pricing-wrap">
+  <hr class="divider">
 
-      <div class="plan">
-        <div class="plan-name" id="pn-free">Free</div>
-        <div class="plan-price">$0<span id="pp-free"> forever</span></div>
-        <p class="plan-desc" id="pd-free">Perfect for trying Aivexa Studio AI</p>
-        <ul class="plan-features">
-          <li id="pf-f1">50 welcome credits (one-time)</li>
-          <li id="pf-f2">5-second videos only</li>
-          <li id="pf-f3">480p resolution</li>
-          <li id="pf-f4">2 videos per day</li>
-          <li class="no" id="pf-f5">10s & 15s videos</li>
-          <li class="no" id="pf-f6">720p HD quality</li>
-          <li class="no" id="pf-f7">Priority queue</li>
+  <!-- FEATURES — 6 cards in auto-fit grid -->
+  <div class="section">
+    <h2 class="sec-title" id="f-title">كل ما تحتاجه للإبداع</h2>
+    <p class="sec-sub" id="f-sub">توليد فيديو احترافي بالذكاء الاصطناعي — بدون أي خبرة تقنية</p>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🎬</div>
+        <div class="feat-title" id="f1t">نص إلى فيديو</div>
+        <div class="feat-desc"  id="f1d">صِف مشهدك وسيحوّله الذكاء الاصطناعي المتقدم إلى فيديو سينمائي احترافي في ثوانٍ.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🖼️</div>
+        <div class="feat-title" id="f2t">صورة إلى فيديو</div>
+        <div class="feat-desc"  id="f2d">ارفع أي صورة وأضف عليها حركة سلسة وواقعية — تحويل فوري لصورتك إلى فيديو حيّ.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">✨</div>
+        <div class="feat-title" id="f3t">تحسين البرومبت تلقائياً</div>
+        <div class="feat-desc"  id="f3d">يُحسّن الذكاء الاصطناعي وصفك تلقائياً لضمان أعلى جودة بصرية وأفضل نتيجة إبداعية.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌍</div>
+        <div class="feat-title" id="f4t">تغذية الاستكشاف</div>
+        <div class="feat-desc"  id="f4d">اكتشف وشارك إبداعات المستخدمين في تغذية تفاعلية تشبه TikTok — استلهم وانشر.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title" id="f5t">توليد فائق السرعة</div>
+        <div class="feat-desc"  id="f5d">أنشئ فيديوهات من 5 إلى 15 ثانية بجودة تصل إلى 720p مع نظام طابور ذكي لضمان الأداء.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📱</div>
+        <div class="feat-title" id="f6t">مصمّم للهاتف أولاً</div>
+        <div class="feat-desc"  id="f6d">تجربة مخصصة للهاتف المحمول — تطبيق Android أصلي مُحسَّن لجميع أحجام الشاشات.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PRICING PREVIEW — summary only, no duplicate tables -->
+  <div class="section">
+    <h2 class="sec-title" id="p-title">أسعار بسيطة وشفافة</h2>
+    <p class="sec-sub"   id="p-sub">ابدأ مجاناً. اترقَّ عندما تحتاج المزيد.</p>
+
+    <div class="pricing-grid">
+      <!-- FREE -->
+      <div class="plan-card">
+        <div class="plan-name"   id="pn-free">🆓 مجاني</div>
+        <div class="plan-price"  id="pp-free">$0</div>
+        <div class="plan-period" id="ppr-free">للأبد</div>
+        <p   class="plan-tagline" id="pt-free">للتجربة والاستكشاف</p>
+        <ul class="plan-feats">
+          <li id="pf-f1">50 كريدت ترحيبي (مرة واحدة)</li>
+          <li id="pf-f2">فيديوهات 5 ثوانٍ فقط</li>
+          <li id="pf-f3">دقة 480p</li>
+          <li id="pf-f4">فيديوان يومياً</li>
+          <li class="no" id="pf-f5">فيديوهات 10 و 15 ثانية</li>
+          <li class="no" id="pf-f6">جودة HD 720p</li>
         </ul>
-        <a href="https://aivexa-studio-ai-app-da65.bolt.host" target="_blank" class="plan-btn free-btn" id="pb-free">Get Started Free</a>
+        <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" class="plan-btn btn-free" id="pb-free">ابدأ مجاناً</a>
       </div>
 
-      <div class="plan featured">
-        <div class="plan-badge" id="pb-badge">Most Popular</div>
-        <div class="plan-name" id="pn-pro">⚡ Pro</div>
-        <div class="plan-price">$9.99<span id="pp-pro">/month</span></div>
-        <p class="plan-desc" id="pd-pro">For regular creators who want more</p>
-        <ul class="plan-features">
-          <li id="pf-p1">150 credits/month (renews monthly)</li>
-          <li id="pf-p2">5-second & 10-second videos</li>
+      <!-- PRO (featured) -->
+      <div class="plan-card featured">
+        <div class="plan-badge" id="pop-badge">الأكثر شعبية</div>
+        <div class="plan-name"    id="pn-pro">⚡ برو</div>
+        <div class="plan-price">$9.99</div>
+        <div class="plan-period"  id="ppr-pro">/شهر</div>
+        <p   class="plan-tagline" id="pt-pro">للمبدعين المنتظمين</p>
+        <ul class="plan-feats">
+          <li id="pf-p1">150 كريدت شهرياً (تتجدد)</li>
+          <li id="pf-p2">فيديوهات 5 و 10 ثوانٍ</li>
           <li id="pf-p3">480p + 720p HD</li>
-          <li id="pf-p4">5 videos per day</li>
-          <li id="pf-p5">Priority queue access</li>
-          <li id="pf-p6">Buy extra credits anytime</li>
-          <li class="no" id="pf-p7">15-second videos</li>
+          <li id="pf-p4">5 فيديوهات يومياً</li>
+          <li id="pf-p5">أولوية في الطابور</li>
+          <li id="pf-p6">شراء كريدت إضافية</li>
         </ul>
-        <a href="https://aivexa-studio-ai-app-da65.bolt.host" target="_blank" class="plan-btn pro-btn" id="pb-pro">Start Pro</a>
+        <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" class="plan-btn btn-pro" id="pb-pro">ابدأ برو</a>
       </div>
 
-      <div class="plan">
-        <div class="plan-name" id="pn-ultra">💎 Ultra</div>
-        <div class="plan-price">$16.99<span id="pp-ultra">/month</span></div>
-        <p class="plan-desc" id="pd-ultra">For power users and professionals</p>
-        <ul class="plan-features">
-          <li id="pf-u1">350 credits/month (renews monthly)</li>
-          <li id="pf-u2">5s, 10s & 15-second videos</li>
+      <!-- ULTRA -->
+      <div class="plan-card">
+        <div class="plan-name"    id="pn-ultra">💎 ألترا</div>
+        <div class="plan-price">$16.99</div>
+        <div class="plan-period"  id="ppr-ultra">/شهر</div>
+        <p   class="plan-tagline" id="pt-ultra">للمحترفين ومنشئي المحتوى</p>
+        <ul class="plan-feats">
+          <li id="pf-u1">350 كريدت شهرياً (تتجدد)</li>
+          <li id="pf-u2">فيديوهات 5 و 10 و 15 ثانية</li>
           <li id="pf-u3">480p + 720p HD</li>
-          <li id="pf-u4">10 videos per day</li>
-          <li id="pf-u5">Highest priority queue</li>
-          <li id="pf-u6">Buy extra credits anytime</li>
-          <li id="pf-u7">All future features first</li>
+          <li id="pf-u4">10 فيديوهات يومياً</li>
+          <li id="pf-u5">أعلى أولوية في الطابور</li>
+          <li id="pf-u6">جميع الميزات المستقبلية أولاً</li>
         </ul>
-        <a href="https://aivexa-studio-ai-app-da65.bolt.host" target="_blank" class="plan-btn ultra-btn" id="pb-ultra">Start Ultra</a>
+        <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" class="plan-btn btn-ultra" id="pb-ultra">ابدأ ألترا</a>
       </div>
-
     </div>
 
-    <p style="text-align:center;font-size:12px;color:var(--text-f);margin-top:20px;" id="p-note">
-      Subscriptions auto-renew monthly. Cancel anytime via Google Play Settings. Credits expire at the end of each billing cycle.
+    <p class="pricing-note" id="p-note">
+      تتجدد الاشتراكات تلقائياً كل شهر. يمكن الإلغاء في أي وقت عبر إعدادات Google Play. تنتهي كريدت الاشتراك في نهاية دورة الفوترة.
     </p>
   </div>
 
-</div><!-- end home -->
+</div><!-- /page-home -->
 
-<!-- ═══════════════════════════════════
-     PRICING PAGE
-═══════════════════════════════════ -->
-<div id="pricing-page" class="page">
-  <div class="legal-wrap">
-    <div class="legal-title" id="pricing-title">Pricing & Subscriptions</div>
-    <div class="legal-meta">Aivexa Studio AI — Available on Google Play Store<br>Developer: Aivexa Studio AI (İSMAİL HORO)</div>
+<!-- =============================================
+     PAGE 2 — PRICING (detailed, English)
+     ============================================= -->
+<div id="page-pricing" class="page">
+  <div class="pricing-page-wrap">
+    <h1 class="pricing-page-title" id="paging-h1">Pricing &amp; Subscriptions</h1>
+    <p class="pricing-page-meta">
+      All purchases are processed through Google Play Billing.<br>
+      Developer: İSMAİL HORO — Aivexa Studio AI — Developer ID: 5714195846802714632
+    </p>
 
-    <div class="legal-body">
-
-      <h2>Subscription Plans</h2>
-      <p>Aivexa Studio AI offers a free tier and two paid subscription plans. All paid subscriptions are processed through Google Play Billing and renew automatically each month unless cancelled at least 24 hours before the end of the current billing period.</p>
-
-      <table>
-        <tr><th>Feature</th><th>Free</th><th>Pro ($9.99/mo)</th><th>Ultra ($16.99/mo)</th></tr>
+    <h2 style="font-size:18px;font-weight:800;margin:0 0 16px;color:var(--purple-l);">Subscription Plans</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Feature</th><th>Free</th><th>Pro — $9.99/mo</th><th>Ultra — $16.99/mo</th></tr>
+      </thead>
+      <tbody>
         <tr><td>Monthly Credits</td><td>50 (one-time)</td><td>150/month</td><td>350/month</td></tr>
         <tr><td>Daily Video Limit</td><td>2 videos</td><td>5 videos</td><td>10 videos</td></tr>
-        <tr><td>Video Duration</td><td>5 seconds</td><td>5s + 10s</td><td>5s + 10s + 15s</td></tr>
-        <tr><td>Resolution</td><td>480p only</td><td>480p + 720p</td><td>480p + 720p</td></tr>
+        <tr><td>Video Duration</td><td>5 seconds only</td><td>5s + 10s</td><td>5s + 10s + 15s</td></tr>
+        <tr><td>Resolution</td><td>480p</td><td>480p + 720p</td><td>480p + 720p</td></tr>
         <tr><td>Queue Priority</td><td>Standard</td><td>Priority</td><td>Highest Priority</td></tr>
-        <tr><td>Extra Credits</td><td>Purchase available</td><td>Purchase available</td><td>Purchase available</td></tr>
+        <tr><td>Extra Credits Purchase</td><td>Available</td><td>Available</td><td>Available</td></tr>
         <tr><td>Credits Expiry</td><td>No expiry</td><td>End of billing cycle</td><td>End of billing cycle</td></tr>
-      </table>
+      </tbody>
+    </table>
 
-      <h2>How Credits Work</h2>
-      <p>Credits are the in-app currency used to generate videos. Each video generation deducts credits from your balance based on duration:</p>
-      <table>
+    <h2 style="font-size:18px;font-weight:800;margin:28px 0 12px;color:var(--purple-l);">How Credits Work</h2>
+    <p style="font-size:13px;color:var(--text-m);margin-bottom:12px;">Credits are the in-app currency used to generate videos. Each generation deducts the following credits based on selected duration:</p>
+    <table class="data-table">
+      <thead>
         <tr><th>Video Duration</th><th>Credit Cost</th><th>Available To</th></tr>
+      </thead>
+      <tbody>
         <tr><td>5 seconds</td><td>10 credits</td><td>All plans</td></tr>
-        <tr><td>10 seconds</td><td>20 credits</td><td>Pro & Ultra</td></tr>
+        <tr><td>10 seconds</td><td>20 credits</td><td>Pro &amp; Ultra only</td></tr>
         <tr><td>15 seconds</td><td>30 credits</td><td>Ultra only</td></tr>
-      </table>
-      <p>If a video generation fails due to a technical error on our side, credits are automatically refunded to your account. Credits are not refunded for completed generations or for content rejected by the moderation system.</p>
-      <p>Monthly subscription credits expire at the end of each billing cycle and do not roll over. Extra credits purchased separately do not expire and accumulate across months.</p>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--text-m);margin-bottom:20px;">Monthly subscription credits expire at the end of each billing cycle and do not roll over. Extra credits purchased separately do not expire and accumulate indefinitely. Credits are automatically refunded if a generation fails due to a technical error on our side. Credits are not refunded for completed generations or for content rejected by our moderation system.</p>
 
-      <h2>Extra Credits — One-Time Purchases</h2>
-      <p>Users on any plan may purchase additional credits at any time through Google Play Billing. Extra credits are added to your balance immediately and do not expire.</p>
-      <table>
-        <tr><th>Pack</th><th>Credits</th><th>Price</th></tr>
-        <tr><td>Starter Pack</td><td>50 credits</td><td>$3.99</td></tr>
-        <tr><td>Popular Pack ⭐</td><td>150 credits</td><td>$9.99</td></tr>
-        <tr><td>Pro Pack</td><td>350 credits</td><td>$21.99</td></tr>
-      </table>
+    <h2 style="font-size:18px;font-weight:800;margin:28px 0 12px;color:var(--purple-l);">Extra Credits — One-Time Purchases</h2>
+    <table class="data-table">
+      <thead>
+        <tr><th>Pack</th><th>Credits</th><th>Price</th><th>Expiry</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Starter Pack</td><td>50 credits</td><td>$3.99</td><td>No expiry</td></tr>
+        <tr><td>Popular Pack ⭐</td><td>150 credits</td><td>$9.99</td><td>No expiry</td></tr>
+        <tr><td>Pro Pack</td><td>350 credits</td><td>$21.99</td><td>No expiry</td></tr>
+      </tbody>
+    </table>
 
-      <h2>Auto-Renewal &amp; Billing</h2>
-      <p>Paid subscriptions (Pro and Ultra) renew automatically on a monthly basis. The subscription fee is charged to your Google Play payment method on the same day each month (the anniversary of your first subscription date). Renewal occurs within 24 hours before the end of the current billing period.</p>
-      <p>Google may send a reminder notification before the renewal date. You can view your next billing date at any time in the Google Play app under Subscriptions.</p>
+    <h2 style="font-size:18px;font-weight:800;margin:28px 0 12px;color:var(--purple-l);">Auto-Renewal Disclosure</h2>
+    <p style="font-size:13px;color:var(--text-m);margin-bottom:16px;">Paid subscriptions (Pro and Ultra) renew automatically on a monthly basis. The subscription fee is charged to your Google Play payment method on the same calendar date each month. Renewal is processed within 24 hours before the end of the current billing period. You can view your next billing date at any time in the Google Play app under Subscriptions.</p>
 
-      <h2>How to Cancel</h2>
-      <p>You may cancel your subscription at any time through Google Play. To cancel:</p>
-      <ul>
-        <li>Open the Google Play Store app on your device.</li>
-        <li>Tap your profile icon in the top-right corner.</li>
-        <li>Select <strong>Payments &amp; subscriptions</strong>, then <strong>Subscriptions</strong>.</li>
-        <li>Find <strong>Aivexa Studio AI</strong> and tap <strong>Cancel subscription</strong>.</li>
-        <li>Follow the on-screen instructions to confirm cancellation.</li>
-      </ul>
-      <p>Cancellation must be made at least 24 hours before the next renewal date to take effect for that billing period. After cancellation, you retain access to Pro or Ultra features until the end of the current paid period. Unused credits will also remain available until the period ends, after which they expire.</p>
+    <h2 style="font-size:18px;font-weight:800;margin:28px 0 12px;color:var(--purple-l);">How to Cancel Your Subscription</h2>
+    <p style="font-size:13px;color:var(--text-m);margin-bottom:12px;">You may cancel at any time through Google Play. Cancellation must be completed at least 24 hours before the next renewal date. Access to paid features continues until the end of the current paid period.</p>
+    <ol style="font-size:13px;color:var(--text-m);padding-inline-start:20px;line-height:2;">
+      <li>Open the Google Play Store application on your Android device.</li>
+      <li>Tap your profile picture icon in the top-right corner of the screen.</li>
+      <li>Select Payments and subscriptions from the menu that appears.</li>
+      <li>Tap Subscriptions to view your active subscriptions.</li>
+      <li>Find Aivexa Studio AI in the list and tap on it to open the subscription details.</li>
+      <li>Tap Cancel subscription and follow the on-screen instructions to confirm your cancellation.</li>
+    </ol>
 
-      <div class="highlight-box">
-        <p>You can also contact us at <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> for assistance with managing your subscription.</p>
-      </div>
+    <h2 style="font-size:18px;font-weight:800;margin:28px 0 12px;color:var(--purple-l);">Refund Policy</h2>
+    <p style="font-size:13px;color:var(--text-m);margin-bottom:12px;">All purchases are subject to Google Play's standard refund policy. You may request a refund from Google directly within 48 hours of any purchase. After 48 hours, send your refund request to <a href="mailto:aivexastudio@gmail.com" style="color:var(--purple-l)">aivexastudio@gmail.com</a> with your Google Play order number. We do not issue refunds for credits already used in successful video generations, for unused monthly credits at the end of a billing cycle, for subscriptions cancelled after the renewal date, or for content rejected due to policy violations. All requests are reviewed within 5 business days.</p>
 
-      <h2>Refund Policy</h2>
-      <p>All purchases — including subscriptions and extra credit packs — are processed through Google Play. Google's standard refund policy applies to all transactions. For in-app purchases on Google Play, users may be eligible to request a refund from Google directly within 48 hours of the purchase.</p>
-      <p>After 48 hours, refund requests must be submitted to the developer. We evaluate refund requests on a case-by-case basis and may issue refunds at our discretion for technical failures or billing errors. We do not issue refunds for:</p>
-      <ul>
-        <li>Credits that have been consumed through successful video generation</li>
-        <li>Unused credits remaining at the end of a billing cycle</li>
-        <li>Subscriptions cancelled after the renewal date has passed</li>
-        <li>Content rejected by the moderation system due to policy violations</li>
-      </ul>
-      <p>To request a refund, contact: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> with your Google Play order number and a description of your issue. We respond within 5 business days.</p>
+    <h2 style="font-size:18px;font-weight:800;margin:28px 0 12px;color:var(--purple-l);">Price Changes</h2>
+    <p style="font-size:13px;color:var(--text-m);margin-bottom:20px;">We reserve the right to change subscription prices. Existing subscribers will receive at least 30 days' advance notice via email or in-app notification before any price change takes effect. Continued use of the subscription after the new price takes effect constitutes your acceptance of the updated pricing.</p>
 
-      <h2>Price Changes</h2>
-      <p>We reserve the right to modify subscription prices. If prices change, we will notify existing subscribers at least 30 days in advance via email or in-app notification. Continued use of the subscription after the new price takes effect constitutes acceptance of the new pricing.</p>
-
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:16px;">
+      <p style="font-size:12px;color:var(--text-m);margin:0;">For billing support contact <a href="mailto:aivexastudio@gmail.com" style="color:var(--purple-l)">aivexastudio@gmail.com</a>. Developer: İSMAİL HORO — Esenyurt İstanbul 34513, Turkey.</p>
     </div>
   </div>
-</div>
+</div><!-- /page-pricing -->
 
-<!-- ═══════════════════════════════════
-     PRIVACY POLICY
-═══════════════════════════════════ -->
-<div id="privacy-page" class="page">
+<!-- =============================================
+     PAGE 3 — PRIVACY POLICY
+     ============================================= -->
+<div id="page-privacy" class="page">
   <div class="legal-wrap">
-    <div class="legal-title">Privacy Policy</div>
+    <h1>Privacy Policy</h1>
     <div class="legal-meta">
-      Last updated: April 2026 &nbsp;|&nbsp; Effective date: April 2026<br>
+      Last updated: April 2026 &nbsp;|&nbsp; Effective: April 2026<br>
       Developer: İSMAİL HORO — Aivexa Studio AI<br>
       Developer ID: 5714195846802714632<br>
       Address: Örnek Mah. 1455 Sokak No:3 2650 Ada 19 Parsel, Esenyurt İstanbul D8, Esenyurt İstanbul 34513, Turkey<br>
       Contact: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>
     </div>
+    <div class="legal-note-en">This policy is provided in English as the legally binding version.</div>
 
     <div class="legal-body">
 
       <h2>1. Introduction</h2>
-      <p>İSMAİL HORO, operating under the developer name <strong>Aivexa Studio AI</strong> ("we," "our," or "us"), develops and maintains the Aivexa Studio AI mobile application ("the App") available on Google Play. This Privacy Policy explains how we collect, use, disclose, retain, and protect your personal information when you download, install, or use the App on Android devices.</p>
-      <p>This App is rated 17+ and is intended for users who are 17 years of age or older. By using the App, you confirm that you meet this age requirement and that you have read, understood, and agree to the practices described in this Privacy Policy.</p>
-      <p>This Privacy Policy applies to the App and to the companion website at <a href="https://sdggbgds-arch.github.io/aivexa-studio/">https://sdggbgds-arch.github.io/aivexa-studio/</a>.</p>
+      <p>İSMAİL HORO, operating under the developer name Aivexa Studio AI ("we," "our," or "us"), develops the Aivexa Studio AI mobile application ("the App"), available on Google Play. This Privacy Policy explains how we collect, use, disclose, retain, and protect your personal information when you use the App on Android devices. This policy also applies to our companion website at https://sdggbgds-arch.github.io/aivexa-studio/.</p>
+      <p>This App is rated 17+ and is not intended for users under the age of 17. By using the App, you confirm you meet this age requirement and agree to the practices described here.</p>
 
       <h2>2. Information We Collect</h2>
 
       <h3>2.1 Information You Provide Directly</h3>
-      <p><strong>Account Information (via Google Sign-In):</strong> When you sign in using Google OAuth, we receive your full name, email address, profile picture URL, and Google Account ID. We do not receive your Google password. This information is used to create and manage your account within the App.</p>
-      <p><strong>Content You Create:</strong> Text prompts you type to generate videos, images you upload for image-to-video generation, and the AI-generated videos produced based on your inputs. This content is stored on our servers to allow you to access your creation history.</p>
-      <p><strong>User-Generated Content on Explore:</strong> If you choose to publish a video to the public Explore feed, the video, its prompt text, and your username become visible to other users of the App.</p>
-      <p><strong>Communications:</strong> Messages you send to us via email for support requests, feedback, or other inquiries.</p>
-      <p><strong>Suggestions:</strong> Feature suggestions or feedback submitted through the in-app suggestion feature.</p>
+      <p>When you sign in using Google Sign-In (OAuth 2.0), we receive your full name, email address, profile picture URL, and Google Account ID. We do not receive your Google password. We also collect the text prompts and images you submit to generate videos, any content you publish to the Explore feed, and any support messages or feature suggestions you send us.</p>
 
       <h3>2.2 Information Collected Automatically</h3>
-      <p><strong>Device Information:</strong> Device model and manufacturer, operating system version, unique device identifiers (such as Android ID), screen resolution, and device language settings.</p>
-      <p><strong>Usage Data:</strong> App features accessed, session start and end times, videos generated (count, duration, resolution), credits consumed, daily usage counts, and in-app navigation patterns.</p>
-      <p><strong>Transaction Data:</strong> Records of in-app purchases including subscription type, purchase date, transaction ID, and credit pack purchases. We do not store your full payment card details — these are handled entirely by Google Play Billing.</p>
-      <p><strong>Technical Logs:</strong> IP address, crash logs, error reports, and performance diagnostics. These are used to diagnose issues and improve App stability.</p>
+      <p>We automatically collect device information including model, manufacturer, operating system version, unique device identifiers, screen resolution, and language settings. We collect usage data including features accessed, session durations, videos generated, credits consumed, and daily usage counts. We collect transaction records including subscription type, purchase date, and transaction ID — we never store your payment card details, as these are handled entirely by Google Play Billing. We also collect technical logs including IP address, crash logs, error reports, and performance diagnostics.</p>
 
-      <h3>2.3 Information We Do Not Collect</h3>
-      <p>We do not collect your precise or approximate GPS location. We do not access your contacts, call logs, or SMS messages. We do not collect biometric data (face recognition, fingerprints). We do not collect health or fitness data.</p>
+      <h3>2.3 Information We Do NOT Collect</h3>
+      <p>We do not collect your GPS location data (precise or approximate). We do not access your device contacts, call logs, or SMS messages. We do not collect biometric data. We do not collect health or fitness data. We do not access your microphone.</p>
 
       <h2>3. How We Use Your Information</h2>
-      <p>We process your personal data for the following purposes, with the legal basis for each indicated in parentheses:</p>
+      <p>We process your personal data only for the following purposes. The legal basis for each is noted in parentheses.</p>
       <ul>
-        <li><strong>Providing the AI video generation service:</strong> Processing your prompts and images through AI systems to create videos. <em>(Performance of contract)</em></li>
-        <li><strong>Account management and authentication:</strong> Creating and maintaining your account, verifying your identity via Google OAuth. <em>(Performance of contract)</em></li>
-        <li><strong>Credits and subscription management:</strong> Tracking your credit balance, processing purchases, managing subscription billing cycles. <em>(Performance of contract)</em></li>
-        <li><strong>Content moderation:</strong> Reviewing content submitted to the Explore feed to enforce our Content Policy, using both automated filters and human review. <em>(Legitimate interest; legal obligation)</em></li>
-        <li><strong>Service improvement:</strong> Analyzing aggregated usage patterns to improve features, fix bugs, and develop new capabilities. <em>(Legitimate interest)</em></li>
-        <li><strong>Customer support:</strong> Responding to your support requests, bug reports, and inquiries. <em>(Legitimate interest; performance of contract)</em></li>
-        <li><strong>Fraud prevention and security:</strong> Detecting and preventing unauthorized access, abuse, or fraudulent transactions. <em>(Legitimate interest)</em></li>
-        <li><strong>Legal compliance:</strong> Meeting our obligations under applicable laws and regulations. <em>(Legal obligation)</em></li>
+        <li>Providing the AI video generation service by processing your prompts and images through our systems. (Performance of contract)</li>
+        <li>Creating and managing your account and authenticating your identity via Google Sign-In. (Performance of contract)</li>
+        <li>Tracking your credit balance, processing purchases, and managing subscription billing cycles. (Performance of contract)</li>
+        <li>Reviewing content submitted to the Explore feed to enforce our Content Policy, using automated filters and human review. (Legitimate interest; legal obligation)</li>
+        <li>Analyzing aggregated usage patterns to improve the App, fix bugs, and develop new features. (Legitimate interest)</li>
+        <li>Responding to your support requests, bug reports, and feedback. (Legitimate interest)</li>
+        <li>Detecting and preventing unauthorized access, abuse, and fraudulent transactions. (Legitimate interest)</li>
+        <li>Complying with our obligations under applicable laws and regulations. (Legal obligation)</li>
       </ul>
-
-      <div class="highlight-box">
-        <p><strong>We do not sell your personal data.</strong> We do not use your data for advertising purposes. We do not share Google user data with third parties for advertising or data brokering. Aivexa Studio AI contains no third-party advertisements.</p>
-      </div>
+      <div class="info-box">We do not sell your personal data. We do not use your data for advertising. We do not share Google user data with third parties for advertising or data brokering. Aivexa Studio AI contains no third-party advertisements.</div>
 
       <h2>4. AI Processing Disclosure</h2>
-      <p>When you submit a text prompt or image for video generation, that content is transmitted to xAI (the operator of the Grok Imagine API) for processing. xAI's systems generate the video output based on your input. This is a core part of the App's functionality.</p>
-      <p>Your prompts and input images are used solely for the purpose of generating the requested video. We do not use your prompts or generated videos to train AI models, nor do we sell this content to third parties. xAI processes your inputs in accordance with their own privacy policy and API terms of service, available at <a href="https://x.ai/legal/privacy-policy" target="_blank">x.ai/legal/privacy-policy</a>.</p>
-      <p>All AI-generated videos are produced by automated systems. Aivexa Studio AI maintains content safety filters on both the input (prompt) and output (video review) stages to prevent generation of prohibited content as defined in our Content Policy.</p>
+      <p>When you submit a text prompt or image for video generation, that content is transmitted to our AI processing provider for the sole purpose of generating the requested video output. Your prompts and uploaded images are not used to train AI models, and we do not sell this content to any third party. The AI provider processes your inputs in accordance with their own privacy policy available at https://x.ai/legal/privacy-policy. All AI-generated videos pass through content safety filters both before generation (prompt screening) and after (video review before Explore publication).</p>
 
-      <h2>5. Sharing Your Information with Third Parties</h2>
-      <p>We share personal data with the following categories of third parties only as necessary to operate the App:</p>
-
-      <table>
-        <tr><th>Third Party</th><th>Purpose</th><th>Data Shared</th><th>Privacy Policy</th></tr>
-        <tr>
-          <td><strong>xAI (Grok Imagine API)</strong><br>Video generation provider</td>
-          <td>Processing text prompts and images to generate AI videos</td>
-          <td>Text prompts, uploaded images</td>
-          <td><a href="https://x.ai/legal/privacy-policy" target="_blank">x.ai/legal/privacy-policy</a></td>
-        </tr>
-        <tr>
-          <td><strong>Supabase, Inc.</strong><br>Database &amp; cloud infrastructure</td>
-          <td>Storing user profiles, videos, credits, and App data</td>
-          <td>Account info, usage data, generated videos, credits history</td>
-          <td><a href="https://supabase.com/privacy" target="_blank">supabase.com/privacy</a></td>
-        </tr>
-        <tr>
-          <td><strong>Google LLC</strong><br>Authentication</td>
-          <td>Providing Google Sign-In (OAuth 2.0)</td>
-          <td>Name, email, profile picture (received from Google)</td>
-          <td><a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></td>
-        </tr>
-        <tr>
-          <td><strong>Google Play Billing</strong><br>Payment processing</td>
-          <td>Processing subscription and in-app purchase payments</td>
-          <td>Transaction records (no card details stored by us)</td>
-          <td><a href="https://play.google.com/about/play-terms/" target="_blank">Google Play Terms</a></td>
-        </tr>
-        <tr>
-          <td><strong>Legal authorities</strong></td>
-          <td>Compliance with legal obligations or court orders</td>
-          <td>Only as required by applicable law</td>
-          <td>N/A</td>
-        </tr>
+      <h2>5. Third-Party Data Sharing</h2>
+      <p>We share personal data only with the following parties, strictly as needed to operate the App.</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>Third Party</th><th>Purpose</th><th>Data Shared</th><th>Privacy Policy</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>xAI (AI video generation)</td><td>Processing prompts and images to generate video output</td><td>Text prompts, uploaded images</td><td>x.ai/legal/privacy-policy</td></tr>
+          <tr><td>Supabase, Inc. (cloud infrastructure)</td><td>Database hosting for user profiles, videos, credits, and App records</td><td>Account info, usage data, generated videos, transaction history</td><td>supabase.com/privacy</td></tr>
+          <tr><td>Google LLC (authentication)</td><td>Providing Google Sign-In via OAuth 2.0</td><td>Name, email, profile picture (received from Google)</td><td>policies.google.com/privacy</td></tr>
+          <tr><td>Google Play Billing (payments)</td><td>Processing subscription and in-app credit purchase payments</td><td>Transaction records (no card details stored by us)</td><td>play.google.com/about/play-terms/</td></tr>
+          <tr><td>Legal authorities</td><td>Compliance with valid legal orders</td><td>Only as required by applicable law</td><td>N/A</td></tr>
+        </tbody>
       </table>
-
-      <p>We require all service providers to maintain appropriate data protection standards and process personal data only in accordance with our instructions.</p>
+      <p>All service providers are required to protect personal data and process it only as instructed by us.</p>
 
       <h2>6. Google API Services — Limited Use Policy</h2>
-      <p>Aivexa Studio AI's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Google API Services User Data Policy</a>, including the Limited Use requirements. Specifically:</p>
+      <p>Aivexa Studio AI's use of information received from Google APIs complies with the Google API Services User Data Policy, including the Limited Use requirements, available at https://developers.google.com/terms/api-services-user-data-policy. Specifically:</p>
       <ul>
-        <li>We use Google user data only to provide or improve the App's features that are visible to the user.</li>
-        <li>We do not use Google user data for advertising, data brokering, or any purpose unrelated to the App's core functionality.</li>
-        <li>We do not allow humans to read Google user data unless the user has given us explicit permission, it is necessary for security purposes, or required by law.</li>
-        <li>We do not sell Google user data to any third party.</li>
+        <li>We use Google user data only to provide or improve the user-facing features of Aivexa Studio AI that are clearly visible to the user.</li>
+        <li>We do not use Google user data for serving advertisements, for data brokering, or for any purpose unrelated to the App's core functionality.</li>
+        <li>We do not allow humans to read Google user data unless the user has given explicit affirmative consent, it is necessary for security purposes, or it is required by law.</li>
+        <li>We do not sell Google user data to any third party under any circumstances.</li>
       </ul>
 
       <h2>7. Data Retention</h2>
-      <table>
-        <tr><th>Data Type</th><th>Retention Period</th></tr>
-        <tr><td>Account information (name, email, profile picture)</td><td>While account is active; deleted upon account deletion</td></tr>
-        <tr><td>Generated videos and thumbnails</td><td>Until deleted by user or account deletion</td></tr>
-        <tr><td>Text prompts and AI inputs</td><td>Stored as part of video history; deleted with the video or account</td></tr>
-        <tr><td>Credits and transaction history</td><td>Retained for 3 years for financial record purposes</td></tr>
-        <tr><td>Usage and analytics data</td><td>12 months in identifiable form; then aggregated/anonymized</td></tr>
-        <tr><td>Support communications</td><td>3 years from last communication</td></tr>
-        <tr><td>Technical logs (crash, error)</td><td>90 days</td></tr>
+      <table class="data-table">
+        <thead>
+          <tr><th>Data Type</th><th>Retention Period</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Account information (name, email, profile picture)</td><td>While account is active; deleted immediately upon account deletion</td></tr>
+          <tr><td>Generated videos and thumbnails</td><td>Until deleted by user or account deletion</td></tr>
+          <tr><td>Text prompts and AI input data</td><td>Stored as part of video history; deleted with the video or account</td></tr>
+          <tr><td>Credits and transaction history</td><td>3 years for financial record and legal compliance purposes</td></tr>
+          <tr><td>Usage and analytics data</td><td>12 months in identifiable form; then aggregated and anonymized</td></tr>
+          <tr><td>Support communications</td><td>3 years from the most recent communication</td></tr>
+          <tr><td>Technical logs (crash reports, error logs)</td><td>90 days</td></tr>
+        </tbody>
       </table>
 
       <h2>8. Account Deletion</h2>
-      <p>You may delete your account at any time directly within the App by navigating to <strong>Profile → Settings → Delete Account</strong>. You will be asked to type "DELETE" to confirm the action. Upon confirmation, the following data is permanently deleted:</p>
-      <ul>
-        <li>Your profile and account credentials</li>
-        <li>All videos you have created</li>
-        <li>All videos you have published to the Explore feed</li>
-        <li>Your credit balance and transaction history (subject to applicable legal retention requirements)</li>
-        <li>Your interaction data (likes, views)</li>
-        <li>Your feature suggestions</li>
-      </ul>
-      <p>Account deletion is immediate and irreversible. Certain data may be retained for a limited period if required by applicable law (for example, financial records for tax compliance). If such retention is necessary, we will inform you. You may also request account deletion by contacting <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>.</p>
+      <p>You may delete your account at any time within the App by going to Profile, then Settings, then Delete Account. You must type "DELETE" to confirm. Upon confirmation, the following data is permanently and immediately deleted: your profile and credentials, all videos you created, all content published to Explore, your credit balance, your interaction data (likes, views), and your feature suggestions. Account deletion is immediate and irreversible. Certain financial records may be retained up to 3 years as required by law. You may also request deletion by emailing <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>.</p>
 
       <h2>9. Data Security</h2>
-      <p>We implement industry-standard security measures to protect your personal data:</p>
-      <ul>
-        <li><strong>Encryption in transit:</strong> All data transmitted between the App and our servers uses TLS 1.2 or higher (HTTPS).</li>
-        <li><strong>Encryption at rest:</strong> Stored data, including videos and user records, is encrypted at rest on Supabase infrastructure.</li>
-        <li><strong>Access controls:</strong> Personal data access is restricted to authorized personnel and automated systems on a need-to-know basis.</li>
-        <li><strong>Row-Level Security:</strong> Our database uses Supabase Row-Level Security (RLS) policies to ensure users can only access their own data.</li>
-        <li><strong>Security monitoring:</strong> We monitor our systems for unauthorized access and implement rate limiting on API endpoints.</li>
-      </ul>
-      <p>No method of data transmission or storage is 100% secure. While we take all reasonable steps to protect your data, we cannot guarantee absolute security. In the event of a data breach that affects your personal data, we will notify you and relevant authorities as required by applicable law, within 72 hours of becoming aware of the breach.</p>
+      <p>All data transmitted between the App and our servers uses TLS 1.2 or higher. Stored data including videos and user records is encrypted at rest on our cloud infrastructure. Access to personal data is restricted to authorized systems and personnel. Our database enforces Row-Level Security policies ensuring users can only access their own data. We apply rate limiting on all API endpoints and monitor for unauthorized access. In the event of a data breach affecting your personal data, we will notify you and relevant authorities within 72 hours as required by applicable law.</p>
 
       <h2>10. International Data Transfers</h2>
-      <p>Aivexa Studio AI is operated by a developer based in Turkey. Our infrastructure providers (Supabase, xAI) may process and store data in servers located in the United States, the European Union, or other jurisdictions. By using the App, you consent to the transfer of your data to these locations.</p>
-      <p>When data is transferred outside of the European Economic Area (EEA), we rely on appropriate safeguards, including Standard Contractual Clauses (SCCs) where applicable, to ensure adequate protection for your personal data.</p>
+      <p>Our developer is based in Turkey. Our infrastructure providers may process and store data on servers located in the United States, the European Union, or other jurisdictions. By using the App, you consent to these transfers. When data is transferred outside the EEA, we ensure appropriate safeguards are in place, including Standard Contractual Clauses where required.</p>
 
       <h2>11. Your Rights</h2>
-      <p>Depending on your location and applicable law, you may have the following rights regarding your personal data:</p>
-      <ul>
-        <li><strong>Right of access:</strong> Request a copy of the personal data we hold about you.</li>
-        <li><strong>Right to rectification:</strong> Request correction of inaccurate or incomplete data.</li>
-        <li><strong>Right to erasure:</strong> Request deletion of your personal data ("right to be forgotten").</li>
-        <li><strong>Right to restriction:</strong> Request that we limit the processing of your data in certain circumstances.</li>
-        <li><strong>Right to data portability:</strong> Receive your data in a structured, machine-readable format (JSON or CSV).</li>
-        <li><strong>Right to object:</strong> Object to processing based on our legitimate interests.</li>
-        <li><strong>Right to withdraw consent:</strong> Where processing is based on consent, withdraw it at any time.</li>
-      </ul>
-      <p>To exercise any of these rights, contact us at <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>. We will respond within 30 days. You also have the right to lodge a complaint with your local data protection authority.</p>
+      <p>Depending on your jurisdiction, you may have the right to access a copy of your personal data, request correction of inaccurate data, request erasure of your data, restrict certain processing activities, receive your data in a structured machine-readable format, object to processing based on our legitimate interests, and withdraw consent where applicable. To exercise any right, email <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>. We respond within 30 days. You may also complain to your local data protection authority.</p>
 
       <h2>12. Children's Privacy (COPPA)</h2>
-      <p>Aivexa Studio AI is rated 17+ on Google Play and is not intended for users under the age of 17. We do not knowingly collect personal information from anyone under 17 years of age. If we become aware that a user under 17 has created an account or submitted data, we will immediately delete that account and all associated data.</p>
-      <p>Parents or guardians who believe their child under 17 has used the App should contact us at <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> so we can take appropriate action.</p>
+      <p>Aivexa Studio AI is rated 17+ on Google Play and is not intended for users under 17 years of age. We do not knowingly collect personal information from anyone under 17. If we discover a user under 17 has registered, we will immediately delete their account and all associated data. Parents or guardians who believe their child has used the App should contact <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> immediately.</p>
 
       <h2>13. User-Generated Content and the Explore Feed</h2>
-      <p>The Explore feed is a public feature of the App. When you choose to publish a video to the Explore feed, that video and its associated prompt text become visible to all users of the App. You retain ownership of the content you create. By publishing to Explore, you grant us a non-exclusive, royalty-free, worldwide license to display, distribute, and promote your content within the App and associated platforms, for the purpose of operating the Explore feed feature.</p>
-      <p>You may remove your content from the Explore feed at any time by deleting the video. Published videos are subject to review and moderation in accordance with our Content Policy.</p>
+      <p>The Explore feed is a public feature. When you choose to publish a video, that video and its prompt text become visible to all users. You retain ownership of your content. By publishing to Explore, you grant us a non-exclusive, royalty-free, worldwide license to display, distribute, and promote your content within the App. You may remove your content at any time by deleting the video. All published content is subject to moderation under our Content Policy.</p>
 
       <h2>14. Cookies and Local Storage</h2>
-      <p>The App does not use third-party tracking cookies. The App uses device local storage (AsyncStorage) to save your preferences, including language settings, theme (dark/light mode), and session authentication tokens. This data remains on your device and is not transmitted to third parties.</p>
-      <p>The companion website (GitHub Pages) does not use cookies or analytics tracking.</p>
+      <p>The App does not use third-party tracking cookies. The App uses device local storage only to save your preferences including language settings, theme selection, and session authentication tokens. This data remains on your device and is not transmitted to third parties. Our GitHub Pages website does not use analytics cookies or third-party tracking.</p>
 
       <h2>15. Changes to This Privacy Policy</h2>
-      <p>We may update this Privacy Policy periodically to reflect changes in our practices or applicable law. We will notify you of material changes by posting a notice within the App or sending an email to your registered address at least 30 days before the changes take effect. Continued use of the App after the effective date of any changes constitutes your acceptance of the updated policy.</p>
+      <p>We may update this policy periodically. We will notify you of material changes via in-app notification or email at least 30 days before the changes take effect. Continued use of the App after the effective date constitutes your acceptance of the updated policy.</p>
 
       <h2>16. Contact &amp; Data Controller</h2>
-      <p><strong>Data Controller:</strong> İSMAİL HORO (operating as Aivexa Studio AI)</p>
-      <p><strong>Address:</strong> Örnek Mah. 1455 Sokak No:3 2650 Ada 19 Parsel, Esenyurt İstanbul D8, Esenyurt İstanbul 34513, Turkey</p>
-      <p><strong>Email:</strong> <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>
-      <p><strong>Response time:</strong> We aim to respond to all privacy-related inquiries within 5–7 business days.</p>
+      <p>Data Controller: İSMAİL HORO (operating as Aivexa Studio AI)</p>
+      <p>Address: Örnek Mah. 1455 Sokak No:3 2650 Ada 19 Parsel, Esenyurt İstanbul D8, Esenyurt İstanbul 34513, Turkey</p>
+      <p>Email: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a></p>
+      <p>We aim to respond to all privacy-related inquiries within 5 to 7 business days.</p>
 
     </div>
   </div>
-</div>
+</div><!-- /page-privacy -->
 
-<!-- ═══════════════════════════════════
-     TERMS OF SERVICE
-═══════════════════════════════════ -->
-<div id="terms-page" class="page">
+<!-- =============================================
+     PAGE 4 — TERMS OF SERVICE
+     ============================================= -->
+<div id="page-terms" class="page">
   <div class="legal-wrap">
-    <div class="legal-title">Terms of Service</div>
+    <h1>Terms of Service</h1>
     <div class="legal-meta">
-      Last updated: April 2026 &nbsp;|&nbsp; Effective date: April 2026<br>
+      Last updated: April 2026 &nbsp;|&nbsp; Effective: April 2026<br>
       Developer: İSMAİL HORO — Aivexa Studio AI<br>
       Contact: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>
     </div>
+    <div class="legal-note-en">This document is provided in English as the legally binding version.</div>
 
     <div class="legal-body">
 
       <h2>1. Acceptance of Terms</h2>
-      <p>These Terms of Service ("Terms") constitute a legally binding agreement between you ("User," "you") and İSMAİL HORO, operating as <strong>Aivexa Studio AI</strong> ("we," "us," "our"). By downloading, installing, accessing, or using the Aivexa Studio AI application ("App") available on Google Play, you confirm that you have read, understood, and agree to be bound by these Terms.</p>
-      <p>These Terms incorporate by reference our Privacy Policy and Content Policy, both of which form an integral part of this agreement. If you do not agree to these Terms, you must not use the App.</p>
+      <p>These Terms of Service ("Terms") form a legally binding agreement between you and İSMAİL HORO, operating as Aivexa Studio AI ("we," "us," "our"). By downloading, installing, or using the Aivexa Studio AI Android application ("the App"), you confirm that you have read, understood, and agree to be bound by these Terms and our Privacy Policy and Content Policy, which are incorporated herein by reference. If you do not agree, you must not use the App.</p>
 
       <h2>2. Definitions</h2>
-      <ul>
-        <li><strong>"App"</strong> means the Aivexa Studio AI mobile application available on the Google Play Store.</li>
-        <li><strong>"User"</strong> or <strong>"you"</strong> means any person who accesses or uses the App.</li>
-        <li><strong>"Content"</strong> means any text, images, videos, prompts, or other material created, uploaded, or shared by a User through the App.</li>
-        <li><strong>"Generated Content"</strong> means AI-generated video output produced by the App in response to a User's prompt or image input.</li>
-        <li><strong>"Credits"</strong> means the in-app currency used to generate videos within the App.</li>
-        <li><strong>"Subscription"</strong> means a paid recurring monthly plan (Pro or Ultra) that provides access to enhanced features and monthly credit allocations.</li>
-        <li><strong>"Extra Credits"</strong> means one-time credit purchases that supplement the monthly subscription allocation or are available to free-tier users.</li>
-        <li><strong>"Explore Feed"</strong> means the public in-app feed where users may voluntarily share their Generated Content with other users.</li>
-        <li><strong>"Service"</strong> means the App and all associated features, infrastructure, and functionality provided by Aivexa Studio AI.</li>
-      </ul>
+      <p>"App" means the Aivexa Studio AI mobile application available on Google Play. "User" or "you" means any person who accesses or uses the App. "Content" means any text, images, videos, or other material created, uploaded, or shared by a User. "Generated Content" means AI-generated video output produced in response to a User's prompt or image. "Credits" means the in-app currency used to generate videos. "Subscription" means a paid recurring monthly plan (Pro or Ultra). "Extra Credits" means one-time credit pack purchases. "Explore Feed" means the public in-app feed where users may share Generated Content. "Service" means the App and all associated features and functionality.</p>
 
       <h2>3. Eligibility</h2>
-      <p>You must be at least 17 years of age to use the App. By using the App, you represent and warrant that you are at least 17 years old and have the legal capacity to enter into a binding contract in your jurisdiction. If you are using the App on behalf of an organization, you represent that you have authority to bind that organization to these Terms.</p>
-      <p>You must not have been previously banned or suspended from the App by us. We reserve the right to refuse access to any person at our sole discretion.</p>
+      <p>You must be at least 17 years of age to use the App. By using the App, you represent that you are at least 17 years old and have the legal capacity to enter a binding contract in your jurisdiction. You must not have been previously permanently banned from the App.</p>
 
       <h2>4. Account Registration</h2>
-      <p>Access to the App requires a Google account. Authentication is provided exclusively through Google Sign-In (OAuth 2.0). You must not create accounts using false identities or impersonate any other person or entity. Only one account is permitted per user. Creating multiple accounts to circumvent daily limits, credit restrictions, or bans is strictly prohibited and may result in permanent termination of all associated accounts.</p>
-      <p>You are responsible for maintaining the security of your Google account and for all activity that occurs under your account. You must notify us immediately at <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> if you suspect unauthorized access to your account. We are not liable for any loss or damage arising from your failure to protect your account credentials.</p>
+      <p>Account registration and authentication is provided exclusively through Google Sign-In (OAuth 2.0). You may maintain only one account. Creating multiple accounts to circumvent daily limits, credit restrictions, or bans is strictly prohibited and may result in permanent termination of all associated accounts. You are solely responsible for all activity that occurs under your account. Notify us immediately at <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> if you suspect unauthorized access.</p>
 
       <h2>5. Credits System</h2>
-      <p>Credits are the in-app currency used to generate videos. The credit cost per video is determined by duration:</p>
-      <ul>
-        <li>5-second video: 10 credits</li>
-        <li>10-second video: 20 credits (Pro and Ultra plans only)</li>
-        <li>15-second video: 30 credits (Ultra plan only)</li>
-      </ul>
-      <p>Credits are deducted from your balance at the time of video generation. Monthly subscription credits (allocated to Pro and Ultra subscribers) expire at the end of each billing cycle and do not roll over to the following month. Credits obtained through one-time "Extra Credits" purchases do not expire.</p>
-      <p>Credits are non-transferable between accounts and cannot be exchanged for cash, goods, services, or any other form of value outside the App. In the event of account deletion, all unused credits are forfeited without refund.</p>
-      <p>If a video generation fails due to a technical fault attributable to our systems or to the xAI API, credits will be refunded to your account. Credits are not refunded for completed generations, for content rejected due to policy violations, or for user-initiated cancellations.</p>
+      <p>Credits are deducted at the time of video generation: 5-second videos cost 10 credits, 10-second videos cost 20 credits (Pro and Ultra plans only), and 15-second videos cost 30 credits (Ultra plan only). Monthly subscription credits expire at the end of each billing cycle and do not roll over. Extra credits purchased separately do not expire. Credits are non-transferable between accounts and cannot be redeemed for cash. Credits are refunded automatically if a generation fails due to a technical fault attributable to our systems or our AI provider. Credits are not refunded for completed generations, content rejected for policy violations, or account deletions.</p>
 
       <h2>6. Subscriptions and Payments</h2>
 
-      <h3>6.1 Subscription Plans</h3>
-      <p>Aivexa Studio AI offers two paid subscription plans — Pro ($9.99/month) and Ultra ($16.99/month) — in addition to a free tier. Plan details, including credit allocations, daily limits, and available features, are described on the Pricing page of this website and within the App.</p>
+      <h3>6.1 Plans</h3>
+      <p>We offer a free tier and two paid subscription plans: Pro at $9.99 per month providing 150 monthly credits and access to 10-second videos at up to 720p with a limit of 5 videos per day; and Ultra at $16.99 per month providing 350 monthly credits and access to all video durations including 15 seconds at up to 720p with a limit of 10 videos per day.</p>
 
       <h3>6.2 Billing and Auto-Renewal</h3>
-      <p>Subscriptions are billed monthly through Google Play Billing. Payment is charged to your Google Play payment method upon subscription confirmation and renews automatically each month on the same calendar date. Renewal charges are applied within 24 hours before the end of the current billing period. You authorize Google Play to charge the applicable subscription fee to your payment method on a recurring monthly basis until you cancel.</p>
+      <p>Subscriptions are billed monthly through Google Play Billing. Payment is charged to your Google Play payment method upon initial subscription and renews automatically each month on the same calendar date. Renewal is processed within 24 hours before the current billing period ends. You authorize Google Play to charge the applicable fee on a recurring monthly basis until you cancel.</p>
 
       <h3>6.3 Cancellation</h3>
-      <p>You may cancel your subscription at any time through Google Play Settings → Payments &amp; subscriptions → Subscriptions → Aivexa Studio AI → Cancel. Cancellation must be made at least 24 hours before the renewal date to prevent the next charge. Access to paid features continues until the end of the current billing period. We do not provide prorated refunds for mid-period cancellations.</p>
+      <p>You may cancel your subscription at any time through Google Play. Cancellation must be completed at least 24 hours before the next renewal date to avoid being charged for the next period. Access to paid features and any remaining monthly credits continues until the end of the current period.</p>
+      <ol>
+        <li>Open the Google Play Store app on your Android device.</li>
+        <li>Tap your profile picture icon in the top-right corner.</li>
+        <li>Select Payments and subscriptions from the dropdown menu.</li>
+        <li>Tap Subscriptions to see a list of your active subscriptions.</li>
+        <li>Find Aivexa Studio AI in the list and tap on it.</li>
+        <li>Tap Cancel subscription and follow the prompts to confirm cancellation.</li>
+      </ol>
 
       <h3>6.4 Extra Credits</h3>
-      <p>Extra credits are one-time purchases available to all users. They are processed through Google Play Billing and added to your account immediately. Extra credits do not expire and accumulate across billing cycles.</p>
+      <p>Extra credits are one-time purchases processed through Google Play Billing. They are added to your account immediately upon purchase, do not expire, and accumulate alongside your monthly subscription credits.</p>
 
       <h3>6.5 Refunds</h3>
-      <p>All purchases are subject to Google Play's standard refund policy. Users may request a refund from Google within 48 hours of purchase. Refund requests after 48 hours should be directed to <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>. We do not guarantee refunds for consumed credits, completed generation sessions, or subscriptions cancelled after the renewal date. Refund requests are evaluated on a case-by-case basis.</p>
+      <p>All purchases are subject to Google Play's standard refund policy. You may request a refund from Google within 48 hours of any purchase. After 48 hours, send your request to <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> with your Google Play order number. We do not provide refunds for credits consumed in successful generations, unused monthly credits at cycle end, subscriptions cancelled after the renewal date, or content rejected for policy violations. All requests are evaluated within 5 business days.</p>
 
       <h3>6.6 Price Changes</h3>
-      <p>We reserve the right to change subscription pricing with at least 30 days' prior notice to existing subscribers. Continued use after the new pricing takes effect constitutes acceptance.</p>
+      <p>We may update subscription prices. Existing subscribers will receive at least 30 days' advance notice via email or in-app notification. Continued use after the new price takes effect constitutes acceptance.</p>
 
       <h2>7. Intellectual Property</h2>
-
-      <h3>7.1 Our Property</h3>
-      <p>The App, its source code, interface design, branding, logo, name "Aivexa Studio AI," and all associated intellectual property are the exclusive property of İSMAİL HORO. You may not copy, modify, distribute, reverse-engineer, decompile, or create derivative works from any part of the App without our prior written permission.</p>
-
-      <h3>7.2 Your Content</h3>
-      <p>You retain ownership of the text prompts, images, and Generated Content you create through the App. By using the App, you grant us a non-exclusive, royalty-free, worldwide license to store, process, and display your content solely as necessary to provide the Service. If you publish content to the Explore feed, you grant us the additional right to display that content publicly to other users of the App.</p>
-      <p>You represent and warrant that you own or have the necessary rights to any images or text you upload, that your content does not infringe any third-party intellectual property rights, and that your use complies with all applicable laws.</p>
-
-      <h3>7.3 AI-Generated Content</h3>
-      <p>Generated Content is produced by automated AI systems (xAI Grok Imagine). We make no representations or warranties about the originality, intellectual property status, or commercial usability of Generated Content. You are solely responsible for evaluating the suitability of Generated Content for your intended use, including any intellectual property clearances that may be required.</p>
+      <p>The App, its code, design, branding, logo, and the name "Aivexa Studio AI" are the exclusive intellectual property of İSMAİL HORO. You may not copy, modify, distribute, reverse-engineer, or create derivative works from any part of the App without our prior written permission. You retain ownership of the content you create. By using the App you grant us a non-exclusive, royalty-free, worldwide license to store, process, and display your content as needed to provide the Service. By publishing to the Explore feed, you additionally grant us the right to display that content publicly. You represent that you own or have rights to all input materials you submit. Generated Content is produced by automated AI systems and we make no representations about its originality or IP status — you are responsible for evaluating its suitability for your intended use.</p>
 
       <h2>8. Prohibited Conduct</h2>
-      <p>You agree not to engage in any of the following activities when using the App:</p>
-      <ul>
-        <li>Generating, uploading, or sharing content that violates our Content Policy</li>
-        <li>Creating multiple accounts to circumvent limits, bans, or restrictions</li>
-        <li>Using automated tools, bots, scripts, or other automated means to access or interact with the App</li>
-        <li>Attempting to bypass, circumvent, or interfere with the App's security measures, authentication systems, or rate limiting</li>
-        <li>Attempting to reverse-engineer, decompile, or extract source code from the App</li>
-        <li>Impersonating any person, entity, or Aivexa Studio AI itself</li>
-        <li>Uploading or submitting content you do not have the right to use</li>
-        <li>Using the App to generate content for the purpose of misleading others, including presenting AI-generated content as authentic without disclosure</li>
-        <li>Engaging in any activity that disrupts, degrades, or interferes with the App or its servers</li>
-        <li>Using the App for any purpose that violates applicable local, national, or international law</li>
-        <li>Submitting knowingly false reports of other users' content</li>
-      </ul>
-      <p>Violation of any of the above may result in immediate account suspension or permanent termination, at our sole discretion, without refund of any remaining credits or subscription fees.</p>
+      <p>You agree not to: generate or share content violating our Content Policy; create multiple accounts to circumvent limits or bans; use bots, scripts, or automated tools to access the App; attempt to bypass, hack, or circumvent any security or authentication system; attempt to reverse-engineer or extract source code; impersonate any person or entity; upload content you do not have the right to use; present AI-generated content as authentic footage to deceive others; disrupt or interfere with the App or its servers; submit false or malicious reports of other users' content; or use the App for any purpose that violates applicable law.</p>
 
       <h2>9. Moderation and Enforcement</h2>
-      <p>All content submitted to the public Explore feed is subject to review and moderation. We use both automated content filters and human review to enforce our Content Policy. Approved content will be published; content that violates our policies will be rejected and the submitting user may be subject to disciplinary action.</p>
-      <p>Users may report content they believe violates our policies using the in-app reporting feature. Reports are reviewed within 48 hours. False or malicious reports may result in account action against the reporting user.</p>
+      <p>All content submitted to the Explore feed is subject to review and moderation. We use automated filters and human review to enforce our Content Policy. Users may report violating content using the in-app flag button. Reports are reviewed within 48 hours. Repeated false or malicious reports may result in account action against the reporting user.</p>
 
       <h2>10. Disclaimer of Warranties</h2>
-      <p>THE APP IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR UNINTERRUPTED AVAILABILITY. WE DO NOT WARRANT THAT THE APP WILL BE ERROR-FREE, SECURE, OR FREE FROM VIRUSES. WE DO NOT WARRANT THAT GENERATED CONTENT WILL MEET YOUR EXPECTATIONS OR BE SUITABLE FOR ANY PARTICULAR USE.</p>
-      <p>AI-generated content may contain inaccuracies, unexpected outputs, or content that is inconsistent with your prompt. We are not responsible for the quality, accuracy, or appropriateness of AI-generated outputs.</p>
+      <div class="caps-block">THE APP IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR UNINTERRUPTED AVAILABILITY. WE DO NOT WARRANT THAT THE APP WILL BE ERROR-FREE OR THAT AI-GENERATED CONTENT WILL MEET YOUR EXPECTATIONS OR BE SUITABLE FOR ANY PARTICULAR PURPOSE.</div>
 
       <h2>11. Limitation of Liability</h2>
-      <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL İSMAİL HORO OR AIVEXA STUDIO AI BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR GOODWILL, ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE APP, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
-      <p>OUR TOTAL CUMULATIVE LIABILITY TO YOU FOR ALL CLAIMS ARISING FROM OR RELATED TO THESE TERMS OR THE APP SHALL NOT EXCEED THE GREATER OF (A) THE TOTAL AMOUNT YOU PAID TO US IN THE 3 MONTHS PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR (B) $10 USD.</p>
-      <p>Some jurisdictions do not allow the exclusion or limitation of certain types of liability, so the above limitations may not apply to you in full.</p>
+      <div class="caps-block">TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, İSMAİL HORO AND AIVEXA STUDIO AI SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF PROFITS, DATA, OR GOODWILL. OUR TOTAL CUMULATIVE LIABILITY FOR ALL CLAIMS SHALL NOT EXCEED THE GREATER OF: (A) THE TOTAL AMOUNTS YOU PAID US IN THE 3 MONTHS PRECEDING THE CLAIM, OR (B) $10 USD. SOME JURISDICTIONS DO NOT ALLOW THESE LIMITATIONS, SO THEY MAY NOT APPLY TO YOU IN FULL.</div>
 
       <h2>12. Indemnification</h2>
-      <p>You agree to defend, indemnify, and hold harmless İSMAİL HORO, Aivexa Studio AI, and their affiliates from and against any claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising from: (a) your use of the App; (b) your violation of these Terms; (c) your violation of any third-party rights; or (d) content you create or publish through the App.</p>
+      <p>You agree to defend, indemnify, and hold harmless İSMAİL HORO and Aivexa Studio AI from and against any claims, damages, losses, liabilities, costs, and legal fees arising from your use of the App, your violation of these Terms, your violation of third-party rights, or the content you create or publish.</p>
 
       <h2>13. Account Suspension and Termination</h2>
-      <p>We reserve the right to suspend or permanently terminate your account and access to the App at any time, with or without notice, if we reasonably believe you have violated these Terms or our Content Policy.</p>
-      <p>For non-critical violations, we will generally provide a warning and opportunity to remedy the violation before suspension. For serious violations — including but not limited to the creation of CSAM, terrorist content, or severe security breaches — we reserve the right to terminate your account immediately without prior notice.</p>
-      <p>You may appeal a suspension or termination decision by contacting <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> within 14 days of the action. We will review and respond to appeals within 7 business days. Our appeal decision is final.</p>
-      <p>Upon termination, your right to use the App ceases immediately. Any remaining subscription credit is forfeited. You may delete your own account at any time through the App's settings.</p>
+      <p>We may suspend or permanently terminate your account if we reasonably believe you have violated these Terms or our Content Policy. For minor violations, we will generally issue a warning first. For serious violations — including CSAM, terrorist content, or severe security breaches — we may terminate immediately without prior notice. You may appeal within 14 days by emailing <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>. We respond to appeals within 7 business days. Upon termination, your right to use the App ceases immediately and remaining credits are forfeited.</p>
 
-      <h2>14. Modifications to the Service and Terms</h2>
-      <p>We reserve the right to modify, update, or discontinue any aspect of the App or Service at any time, with or without notice. We reserve the right to modify these Terms at any time. For material changes, we will provide at least 30 days' advance notice via in-app notification or email. Continued use of the App after any change to these Terms constitutes your acceptance of the revised Terms.</p>
+      <h2>14. Modifications to Service and Terms</h2>
+      <p>We may modify the App or these Terms at any time. For material changes to the Terms, we will provide at least 30 days' advance notice via in-app notification or email. Continued use after any change constitutes your acceptance.</p>
 
-      <h2>15. Governing Law and Dispute Resolution</h2>
-      <p>These Terms are governed by the laws of the Republic of Turkey, without regard to conflict of law principles. Any dispute arising from or relating to these Terms or the App shall first be attempted to be resolved through good-faith negotiation. If negotiation fails within 30 days, disputes shall be subject to the exclusive jurisdiction of the courts of İstanbul, Turkey.</p>
-      <p>Users in the European Union may also have the right to pursue disputes through their local courts and EU consumer protection mechanisms. Users in the United States may be subject to additional rights under applicable state laws.</p>
+      <h2>15. Governing Law</h2>
+      <p>These Terms are governed by the laws of the Republic of Turkey, without regard to conflict of law principles. Disputes shall first be attempted through good-faith negotiation. If unresolved within 30 days, disputes shall be subject to the exclusive jurisdiction of the courts of İstanbul, Turkey. Users in the EU retain rights under applicable consumer protection laws in their jurisdiction.</p>
 
       <h2>16. General Provisions</h2>
-      <p><strong>Severability:</strong> If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.</p>
-      <p><strong>Waiver:</strong> Our failure to enforce any provision of these Terms shall not constitute a waiver of our right to enforce it in the future.</p>
-      <p><strong>Entire Agreement:</strong> These Terms, together with the Privacy Policy and Content Policy, constitute the entire agreement between you and Aivexa Studio AI with respect to the App and supersede all prior agreements.</p>
-      <p><strong>Contact:</strong> For questions regarding these Terms, contact us at <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>.</p>
+      <p>If any provision is found invalid or unenforceable, the remaining provisions continue in full force. Our failure to enforce any provision is not a waiver. These Terms, together with the Privacy Policy and Content Policy, constitute the entire agreement between you and Aivexa Studio AI. For questions contact <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>.</p>
 
     </div>
   </div>
-</div>
+</div><!-- /page-terms -->
 
-<!-- ═══════════════════════════════════
-     CONTENT POLICY
-═══════════════════════════════════ -->
-<div id="content-page" class="page">
+<!-- =============================================
+     PAGE 5 — CONTENT POLICY
+     ============================================= -->
+<div id="page-content" class="page">
   <div class="legal-wrap">
-    <div class="legal-title">Content Policy</div>
+    <h1>Content Policy</h1>
     <div class="legal-meta">
-      Last updated: April 2026 &nbsp;|&nbsp; Effective date: April 2026<br>
+      Last updated: April 2026 &nbsp;|&nbsp; Effective: April 2026<br>
       Contact: <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a>
     </div>
+    <div class="legal-note-en">This policy is provided in English as the legally binding version.</div>
 
     <div class="legal-body">
 
       <h2>1. Purpose</h2>
-      <p>This Content Policy defines the standards for content that may be created, generated, or shared through Aivexa Studio AI. Our goal is to maintain a safe, creative, and respectful environment for all users while preventing misuse of AI video generation technology. This policy applies to all text prompts, uploaded images, generated videos, and any content published to the Explore feed.</p>
-      <p>As an operator of an AI generative system, we take full responsibility for the outputs produced through our platform. We employ both automated safety filters and human moderation to enforce this policy.</p>
+      <p>This Content Policy defines the standards for all content created, generated, or shared through Aivexa Studio AI. Our goal is to maintain a safe, creative, and respectful community while preventing misuse of AI video generation technology. This policy applies to all text prompts, uploaded images, generated videos, and any content published to the Explore feed. As an operator of AI generative systems, we take full responsibility for outputs produced on our platform and employ both automated safety filters and human moderation.</p>
 
       <h2>2. Strictly Prohibited Content</h2>
-      <p>The following categories of content are absolutely prohibited on Aivexa Studio AI, regardless of context, claimed artistic merit, or user intent. Violations in these categories will result in immediate permanent account termination and may be reported to relevant law enforcement authorities:</p>
-
-      <h3>2.1 Child Sexual Abuse Material (CSAM)</h3>
-      <p>Any content that sexually depicts, exploits, or endangers minors — whether generated by AI or otherwise — is strictly prohibited. There are no exceptions to this rule. Such content will be immediately removed, the account permanently banned, and the incident reported to the National Center for Missing &amp; Exploited Children (NCMEC) and/or appropriate law enforcement authorities in the relevant jurisdiction.</p>
-
-      <h3>2.2 Non-Consensual Intimate Imagery (Deepfake Abuse)</h3>
-      <p>It is strictly prohibited to create AI-generated videos or images depicting real, identifiable individuals in sexual or intimate situations without their documented, explicit consent. This includes "deepfake" content that realistically simulates the likeness of a real person in a sexual context. Violations are subject to immediate permanent ban and legal referral.</p>
-
-      <h3>2.3 Terrorism and Violent Extremism</h3>
-      <p>Content that promotes, glorifies, recruits for, or facilitates terrorism, violent extremism, or mass violence is strictly prohibited. This includes content created on behalf of or in support of designated terrorist organizations.</p>
-
-      <h3>2.4 Incitement to Real-World Violence</h3>
-      <p>Content that directly and explicitly calls for, incites, or facilitates violence against specific identified individuals or groups is prohibited.</p>
+      <p>The following categories are absolutely prohibited with no exceptions. Violations result in immediate permanent account termination and may be reported to law enforcement.</p>
+      <p>Child Sexual Abuse Material (CSAM): Any content that sexually depicts, exploits, or endangers minors — whether AI-generated or otherwise — is strictly and absolutely prohibited. Such content is immediately removed, the account is permanently banned, and the incident is reported to the National Center for Missing and Exploited Children (NCMEC) and appropriate law enforcement authorities in the relevant jurisdiction.</p>
+      <p>Non-Consensual Intimate Imagery: Creating AI-generated videos or images depicting real, identifiable people in sexual or intimate situations without their documented explicit consent is strictly prohibited. This includes deepfake content that simulates a real person's likeness in a sexual context.</p>
+      <p>Terrorism and Violent Extremism: Content that promotes, glorifies, recruits for, or facilitates terrorism, violent extremism, or mass violence — including content in support of designated terrorist organizations — is strictly prohibited.</p>
+      <p>Incitement to Real-World Violence: Content that directly and explicitly calls for, incites, or facilitates violence against specific identified individuals or groups is prohibited.</p>
 
       <h2>3. Prohibited Content</h2>
-      <p>The following content is prohibited on Aivexa Studio AI. Violations may result in content removal and account suspension or termination, depending on severity and frequency:</p>
-
-      <h3>3.1 Explicit Sexual Content</h3>
-      <p>Sexually explicit content (pornography), including graphic depictions of sexual acts or full nudity, is not permitted. The App may be used for artistic or creative work involving the human form, but content must not be primarily focused on explicit sexual gratification.</p>
-
-      <h3>3.2 Graphic Violence and Gore</h3>
-      <p>Content depicting realistic, graphic violence — including torture, dismemberment, or detailed portrayals of fatal injuries — with no clear artistic, educational, or journalistic purpose is prohibited. Stylized violence in a clearly fictional context may be acceptable under editorial review.</p>
-
-      <h3>3.3 Hate Speech and Discrimination</h3>
-      <p>Content that attacks, dehumanizes, or incites hatred against individuals or groups based on race, ethnicity, national origin, religion, gender, sexual orientation, disability, or other protected characteristics is prohibited.</p>
-
-      <h3>3.4 Harassment and Targeted Abuse</h3>
-      <p>Creating content designed to harass, bully, intimidate, or threaten a specific identifiable individual is prohibited, whether that individual is a public figure or a private person.</p>
-
-      <h3>3.5 Misleading Deepfakes and Impersonation</h3>
-      <p>Creating realistic video content depicting real, identifiable public figures or private individuals in fabricated scenarios presented as genuine (without disclosure that the content is AI-generated) is prohibited, particularly where such content is likely to cause reputational harm, spread misinformation, or deceive viewers regarding real events.</p>
-
-      <h3>3.6 Dangerous Misinformation</h3>
-      <p>Content that spreads demonstrably false medical, scientific, or public safety information that is likely to cause real-world harm is prohibited. This includes content designed to interfere with elections or spread false emergency information.</p>
-
-      <h3>3.7 Privacy Violations (Doxxing)</h3>
-      <p>Content that reveals or implies private personal information about identifiable individuals (addresses, phone numbers, financial details, etc.) without their consent is prohibited.</p>
-
-      <h3>3.8 Intellectual Property Violations</h3>
-      <p>Uploading or using reference images or content that you do not have the right to use (copyrighted images without permission) violates this policy. Users are solely responsible for ensuring they have appropriate rights to all input materials.</p>
-
-      <h3>3.9 Instructions for Harmful Activities</h3>
-      <p>Content that provides detailed instructions for creating weapons, dangerous substances, or carrying out illegal activities is prohibited.</p>
+      <p>The following content is prohibited on Aivexa Studio AI. Violations may result in content removal and account suspension or termination depending on severity.</p>
+      <p>Explicit Sexual Content: Pornographic content or graphic depictions of sexual acts or full nudity intended for sexual gratification is not permitted on this platform.</p>
+      <p>Graphic Violence and Gore: Realistic graphic violence including torture, dismemberment, or detailed portrayals of fatal injuries with no clear artistic, educational, or journalistic purpose is prohibited.</p>
+      <p>Hate Speech and Discrimination: Content that attacks, dehumanizes, or incites hatred against individuals or groups based on race, ethnicity, national origin, religion, gender, sexual orientation, disability, or other protected characteristics is prohibited.</p>
+      <p>Harassment and Targeted Abuse: Content designed to harass, bully, intimidate, or threaten a specific identifiable individual is prohibited regardless of whether that person is a public figure or private individual.</p>
+      <p>Misleading Deepfakes and Impersonation: Creating realistic video content depicting real individuals in fabricated scenarios presented as genuine — particularly where intended to cause reputational harm or spread misinformation — is prohibited.</p>
+      <p>Dangerous Misinformation: Content spreading demonstrably false medical, scientific, or public safety information likely to cause real-world harm is prohibited.</p>
+      <p>Privacy Violations (Doxxing): Content that reveals or implies private personal information about identifiable individuals without their consent is prohibited.</p>
+      <p>Intellectual Property Violations: Uploading or using reference content that you do not have the right to use violates this policy. Users are solely responsible for ensuring they have appropriate rights to all input materials.</p>
+      <p>Instructions for Harmful Activities: Content providing detailed instructions for creating weapons, dangerous substances, or carrying out illegal activities is prohibited.</p>
 
       <h2>4. Allowed Content</h2>
-      <p>Aivexa Studio AI is designed to support creative expression across a wide range of use cases. The following types of content are expressly permitted:</p>
-      <ul>
-        <li>Natural landscapes, abstract art, fantasy, and science-fiction scenes</li>
-        <li>Fictional characters, animations, and stylized human figures</li>
-        <li>Educational and documentary-style content</li>
-        <li>Commercial and marketing content for lawful products and services</li>
-        <li>Cultural, historical, and artistic representations</li>
-        <li>Humor, satire, and parody (with clear fictional framing)</li>
-        <li>Sports, lifestyle, and entertainment content</li>
-        <li>Personal creative projects, visual storytelling, and concept art</li>
-      </ul>
+      <p>Aivexa Studio AI is designed to support broad creative expression. The following types of content are expressly permitted: natural landscapes, abstract art, fantasy, and science-fiction scenes; fictional characters, animations, and stylized human figures; educational and documentary-style content; commercial and marketing content for lawful products and services; cultural, historical, and artistic representations; humor, satire, and parody with clear fictional framing; sports, lifestyle, and entertainment content; and personal creative projects, visual storytelling, and concept art.</p>
 
-      <h2>5. Content Requiring Editorial Review (Gray Area)</h2>
-      <p>Some content may be permitted in specific contexts but will be reviewed before appearing on the public Explore feed. These include:</p>
-      <ul>
-        <li>Depictions of historical atrocities or conflict with clear educational framing</li>
-        <li>Stylized violence in clearly fictional contexts (e.g., action movie sequences)</li>
-        <li>Sensitive religious or political themes presented in a factual or artistic manner</li>
-        <li>Horror and psychological thriller content that does not cross into gratuitous gore</li>
-        <li>Realistic depictions of the human body in non-sexual artistic contexts</li>
-      </ul>
-      <p>We reserve the right to reject content in these categories that, in our judgment, does not meet our community standards, even if it does not fall explicitly into the prohibited categories above.</p>
+      <h2>5. Gray Area Content Requiring Review</h2>
+      <p>Some content may be acceptable in specific contexts but requires review before appearing on the public Explore feed. This includes depictions of historical atrocities or conflict with clear educational framing, stylized violence in clearly fictional contexts such as action sequences, sensitive religious or political themes presented in a factual or artistic manner, horror and psychological thriller content that does not cross into gratuitous gore, and artistic depictions of the human body in non-sexual contexts. We reserve the right to reject content in these categories that does not meet our community standards, even if it does not fall explicitly into a prohibited category.</p>
 
       <h2>6. AI-Specific Obligations</h2>
-      <p>As a platform that enables AI-generated content, we have additional obligations:</p>
-      <ul>
-        <li><strong>Pre-generation filtering:</strong> All prompts and uploaded images pass through automated content safety filters before being submitted to the AI model. Prompts containing prohibited content are blocked before any processing occurs.</li>
-        <li><strong>Post-generation review:</strong> Videos submitted for publication on the Explore feed undergo human review within 24–48 hours before being made publicly visible.</li>
-        <li><strong>AI content labeling:</strong> All content on the Explore feed is implicitly understood to be AI-generated, as the App exclusively produces AI-generated videos. Users must not present AI-generated content as authentic real-world footage in contexts designed to deceive.</li>
-        <li><strong>Deepfake prohibition:</strong> Our systems are designed to detect and prevent the creation of realistic non-consensual deepfakes. Circumventing these systems is a serious violation subject to immediate permanent ban.</li>
-      </ul>
+      <p>As an AI generative platform we maintain the following safeguards. All prompts and uploaded images pass through automated content safety filters before being submitted for video generation — prompts containing prohibited content are blocked before any AI processing occurs. Videos submitted for Explore publication undergo human review within 24 to 48 hours before becoming publicly visible. Our systems are designed to detect and prevent the creation of realistic non-consensual deepfakes. All content on the Explore feed is implicitly understood to be AI-generated. Users must not present AI-generated content as authentic real-world footage in contexts designed to deceive. Circumventing our AI safety systems is a serious violation subject to immediate permanent ban.</p>
 
       <h2>7. User Responsibilities</h2>
-      <p>You are fully and solely responsible for the content you generate and share through the App. By using the App, you represent that:</p>
-      <ul>
-        <li>You will not intentionally attempt to generate prohibited content</li>
-        <li>You have the right to use all input materials (images, reference content) you submit</li>
-        <li>You will not misrepresent AI-generated content as authentic in contexts designed to deceive or harm others</li>
-        <li>You understand that violating this policy may expose you to legal liability in addition to account action</li>
-      </ul>
+      <p>You are fully responsible for the content you generate and share through the App. By using the App you represent that you will not intentionally attempt to generate prohibited content, that you have the right to use all input materials you submit, that you will not misrepresent AI-generated content as authentic where intended to deceive or harm, and that you understand that violating this policy may expose you to legal liability in addition to platform consequences.</p>
 
       <h2>8. Reporting System</h2>
-      <p>Users can report content they believe violates this policy using the in-app report button available on every video in the Explore feed. To submit a report:</p>
-      <ul>
-        <li>Tap the <strong>Flag</strong> icon on the video in question</li>
-        <li>Select a reason for the report</li>
-        <li>Submit the report</li>
-      </ul>
-      <p>Reports are reviewed within 48 hours. For urgent reports involving CSAM or imminent violence, contact us directly at <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> with subject line "URGENT REPORT."</p>
-      <p>Users who submit false or malicious reports may face account action. Reporters are never identified to the reported user.</p>
+      <p>Users can report content they believe violates this policy using the in-app flag button available on every video in the Explore feed. To report, tap the flag icon on the video, select the reason that best describes the violation, and submit the report. Reports are reviewed within 48 hours. For urgent reports involving CSAM or imminent threats of violence, contact us directly at <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> with the subject line "URGENT REPORT — CSAM" or "URGENT REPORT — VIOLENCE THREAT." The identity of reporters is never disclosed to the reported user. Users who submit false or malicious reports may face account action.</p>
 
       <h2>9. Enforcement and Penalties</h2>
-      <table>
-        <tr><th>Violation Level</th><th>Action</th></tr>
-        <tr><td>Minor first offense (borderline content, low-severity policy breach)</td><td>Content removal + formal warning via email</td></tr>
-        <tr><td>Repeated minor offenses or moderate violation</td><td>Content removal + 7-day account suspension</td></tr>
-        <tr><td>Serious violation (harassment, graphic violence, non-CSAM deepfake abuse)</td><td>Content removal + 30-day to permanent suspension</td></tr>
-        <tr><td>Severe violation (CSAM, terrorism, non-consensual intimate imagery)</td><td>Immediate permanent ban + report to law enforcement</td></tr>
+      <table class="data-table">
+        <thead>
+          <tr><th>Violation Level</th><th>Action Taken</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Minor first offense (borderline content, low-severity breach)</td><td>Content removed. Formal warning sent via email.</td></tr>
+          <tr><td>Repeated minor offenses or moderate violation</td><td>Content removed. Account suspended for 7 days.</td></tr>
+          <tr><td>Serious violation (harassment, graphic violence, non-CSAM deepfake)</td><td>Content removed. Account suspended 30 days to permanent.</td></tr>
+          <tr><td>Severe violation (CSAM, terrorism, non-consensual intimate imagery)</td><td>Immediate permanent ban. Report filed with law enforcement.</td></tr>
+        </tbody>
       </table>
-      <p>Suspended users lose access to all features during the suspension period. Credits and subscriptions are not refunded during or following a suspension or ban resulting from policy violations.</p>
+      <p>Suspended or banned users lose access to all features during the penalty period. Credits and subscription fees are not refunded following bans resulting from policy violations.</p>
 
       <h2>10. Appeals</h2>
-      <p>Users who believe their content was incorrectly removed or their account was incorrectly suspended may appeal by emailing <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> within 14 days of the action, providing a clear explanation of why they believe the action was incorrect. We will review all appeals within 7 business days. Appeal decisions are final.</p>
+      <p>Users who believe a content removal or account suspension was applied incorrectly may appeal by emailing <a href="mailto:aivexastudio@gmail.com">aivexastudio@gmail.com</a> within 14 days of the action. Your appeal should include a clear explanation of why you believe the decision was incorrect. We will review all appeals within 7 business days. Appeal decisions are final.</p>
 
       <h2>11. Policy Updates</h2>
-      <p>This Content Policy may be updated to address new types of content, platform developments, or changes in applicable law. Material changes will be communicated to users via in-app notification or email at least 30 days before taking effect.</p>
+      <p>This Content Policy may be updated to address new types of content, platform developments, or changes in applicable law or platform requirements. Material changes will be communicated to users via in-app notification or email at least 30 days before taking effect.</p>
 
     </div>
   </div>
-</div>
+</div><!-- /page-content -->
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Aivexa Studio AI</div>
-  <div class="footer-links">
-    <a onclick="showPage('home')" id="fl-home">Home</a>
-    <a onclick="showPage('pricing')" id="fl-pricing">Pricing</a>
-    <a onclick="showPage('privacy')" id="fl-privacy">Privacy Policy</a>
-    <a onclick="showPage('terms')" id="fl-terms">Terms of Service</a>
-    <a onclick="showPage('content')" id="fl-content">Content Policy</a>
-    <a href="mailto:aivexastudio@gmail.com" id="fl-support">Support</a>
+<!-- =============================================
+     PAGE 6 — SUPPORT (real page, bilingual, with delete-data section)
+     ============================================= -->
+<div id="page-support" class="page">
+  <div class="support-wrap">
+
+    <h1 style="font-size:26px;font-weight:900;margin-bottom:6px;" id="sup-h1">مركز الدعم</h1>
+    <p style="font-size:13px;color:var(--text-m);margin-bottom:32px;" id="sup-sub">
+      نرد على جميع الاستفسارات خلال 2–3 أيام عمل. للمشكلات العاجلة المتعلقة بسلامة المحتوى نرد خلال 24 ساعة.
+    </p>
+
+    <!-- CONTACT CARDS -->
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-icon">💬</div>
+        <div class="contact-title" id="cc1t">الدعم العام</div>
+        <div class="contact-desc"  id="cc1d">أسئلة حول التطبيق والحسابات والكريدت والاشتراكات.</div>
+        <a href="mailto:aivexastudio@gmail.com" class="contact-link">aivexastudio@gmail.com</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">🚩</div>
+        <div class="contact-title" id="cc2t">الإبلاغ عن محتوى</div>
+        <div class="contact-desc"  id="cc2d">أبلغ عن فيديو أو مستخدم ينتهك سياسة المحتوى.</div>
+        <a href="mailto:aivexastudio@gmail.com?subject=Content%20Report" class="contact-link">aivexastudio@gmail.com</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">🗑️</div>
+        <div class="contact-title" id="cc3t">حذف الحساب</div>
+        <div class="contact-desc"  id="cc3d">طلب حذف حسابك وجميع بياناتك الشخصية.</div>
+        <a href="mailto:aivexastudio@gmail.com?subject=Account%20Deletion%20Request" class="contact-link">aivexastudio@gmail.com</a>
+      </div>
+    </div>
+
+    <!-- FAQ SECTION -->
+    <h2 style="font-size:18px;font-weight:800;margin-bottom:20px;" id="faq-h2">الأسئلة الشائعة</h2>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)" id="fq1">
+        <span>كيف أُلغي اشتراكي؟</span><span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a" id="fa1">افتح تطبيق Google Play Store على جهازك، ثم اضغط على أيقونة صورتك الشخصية في الزاوية العلوية. اختر "المدفوعات والاشتراكات" ثم "الاشتراكات". ابحث عن Aivexa Studio AI واضغط عليه ثم اختر "إلغاء الاشتراك". يجب الإلغاء قبل 24 ساعة على الأقل من تاريخ التجديد. ستحتفظ بالوصول إلى المميزات المدفوعة حتى نهاية الفترة الحالية.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)" id="fq2">
+        <span>كيف أطلب استرداد مبلغ؟</span><span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a" id="fa2">خلال 48 ساعة من أي عملية شراء يمكنك طلب الاسترداد مباشرة من Google Play. بعد 48 ساعة أرسل طلبك إلى aivexastudio@gmail.com مع رقم طلب Google Play الخاص بك. نراجع جميع الطلبات خلال 5 أيام عمل. لا نرد على الكريدت المستخدمة بالفعل في عمليات توليد ناجحة.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)" id="fq3">
+        <span>لماذا تم حذف أو رفض محتواي؟</span><span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a" id="fa3">كل المحتوى المنشور في تغذية الاستكشاف يخضع لمراجعة يدوية قبل أن يصبح مرئياً للعموم. قد يُرفض المحتوى إذا انتهك سياسة المحتوى. ستصلك إشعار يوضح سبب الرفض. يمكنك الاستئناف بإرسال بريد إلكتروني إلى aivexastudio@gmail.com خلال 14 يوماً.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)" id="fq4">
+        <span>كيف أحذف حسابي؟</span><span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a" id="fa4">يمكنك حذف حسابك مباشرة من التطبيق عبر: الملف الشخصي ← الإعدادات ← حذف الحساب. اكتب "DELETE" للتأكيد. يُحذف الحساب وجميع بياناتك فوراً ونهائياً. يمكنك أيضاً إرسال طلب إلى aivexastudio@gmail.com بعنوان "Account Deletion Request".</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)" id="fq5">
+        <span>هل تنتهي صلاحية الكريدت؟</span><span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a" id="fa5">كريدت الاشتراك الشهري (برو وألترا) تنتهي في نهاية كل دورة فوترة ولا تُنقل للشهر التالي. الكريدت الإضافية المشتراة بشكل منفصل لا تنتهي أبداً وتتراكم في حسابك. الكريدت الترحيبية (50 كريدت للمستخدمين الجدد) لا تنتهي أيضاً.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)" id="fq6">
+        <span>لماذا يستغرق الفيديو وقتاً طويلاً أو يفشل؟</span><span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a" id="fa6">قد يستغرق التوليد وقتاً أطول خلال ساعات الذروة بسبب ارتفاع الطلب. نظام الطابور الذكي يعالج الطلبات بشكل متسلسل لضمان الجودة. إذا فشل التوليد بسبب خطأ تقني من جانبنا تُستردّ الكريدت تلقائياً. في حالة تكرار المشكلة راسلنا على aivexastudio@gmail.com مع ذكر موديل الجهاز.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)" id="fq7">
+        <span>كيف أُبلّغ عن خطأ تقني في التطبيق؟</span><span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a" id="fa7">أرسل بريداً إلكترونياً إلى aivexastudio@gmail.com بعنوان "Bug Report". أدرج موديل جهازك وإصدار نظام Android ووصفاً للمشكلة وخطوات إعادة إنتاجها إذا أمكن. لقطات الشاشة أو تسجيلات الشاشة تساعد كثيراً. نرد خلال 2–3 أيام عمل.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)" id="fq8">
+        <span>ما الفرق بين الخطط المجانية وبرو وألترا؟</span><span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a" id="fa8">الخطة المجانية تمنحك 50 كريدت ترحيبية لإنشاء فيديوهات 5 ثوانٍ بدقة 480p بحد فيديوين يومياً. برو بـ $9.99 شهرياً يوفر 150 كريدت ويفتح فيديوهات 10 ثوانٍ و720p مع 5 فيديوهات يومياً وأولوية في الطابور. ألترا بـ $16.99 شهرياً يوفر 350 كريدت وجميع المدد حتى 15 ثانية مع 10 فيديوهات يومياً وأعلى أولوية.</div>
+    </div>
+
+    <!-- DATA DELETION SECTION — id="delete-data" required for Google Play Data Safety form -->
+    <div class="delete-box" id="delete-data">
+      <h3 id="del-h3">طلب حذف البيانات — Request Data Deletion</h3>
+      <p style="font-size:13px;color:var(--text-m);margin-bottom:12px;" id="del-p1">
+        لديك الحق الكامل في طلب حذف جميع بياناتك الشخصية. You have the right to request deletion of all your personal data.
+      </p>
+      <p style="font-size:13px;color:var(--text-m);margin-bottom:8px;" id="del-p2">
+        من داخل التطبيق: الملف الشخصي ← الإعدادات ← حذف الحساب ← اكتب DELETE للتأكيد. يُحذف كل شيء فوراً ونهائياً. In-app: Profile → Settings → Delete Account → type DELETE to confirm. Everything is deleted immediately and permanently.
+      </p>
+      <p style="font-size:13px;color:var(--text-m);margin-bottom:14px;" id="del-p3">
+        عبر البريد الإلكتروني: أرسل إلى <a href="mailto:aivexastudio@gmail.com?subject=Data%20Deletion%20Request" style="color:var(--red)">aivexastudio@gmail.com</a> بعنوان "Data Deletion Request" مع البريد الإلكتروني المرتبط بحسابك. نعالج الطلب خلال 30 يوماً ونُرسل تأكيداً. Via email: send to aivexastudio@gmail.com with subject "Data Deletion Request" and your account email. Processed within 30 days with confirmation sent.
+      </p>
+      <p style="font-size:12px;color:var(--text-f);" id="del-note">
+        ملاحظة: قد تُحتفظ ببعض السجلات المالية لمدة تصل إلى 3 سنوات وفقاً للمتطلبات القانونية. Note: Certain financial records may be retained up to 3 years for legal and tax compliance.
+      </p>
+    </div>
+
   </div>
-  <p class="footer-copy">© 2026 Aivexa Studio AI. All rights reserved.</p>
-  <p class="footer-dev">Developer: İSMAİL HORO — Esenyurt İstanbul 34513, Turkey — Developer ID: 5714195846802714632</p>
+</div><!-- /page-support -->
+
+<!-- =============================================
+     FOOTER
+     ============================================= -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Aivexa Studio AI</div>
+    <p class="footer-tagline" id="ft-tagline">أنشئ فيديوهات AI احترافية في ثوانٍ</p>
+
+    <div class="footer-links">
+      <a onclick="navigate('home')"    id="fl-home">الرئيسية</a>
+      <a onclick="navigate('pricing')" id="fl-pricing">الأسعار</a>
+      <a onclick="navigate('privacy')" id="fl-privacy">سياسة الخصوصية</a>
+      <a onclick="navigate('terms')"   id="fl-terms">شروط الاستخدام</a>
+      <a onclick="navigate('content')" id="fl-content">سياسة المحتوى</a>
+      <a onclick="navigate('support')" id="fl-support">الدعم</a>
+    </div>
+
+    <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" class="footer-play">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M3.18 23.76c.35.2.76.2 1.09-.02l18-11a1 1 0 0 0 0-1.73l-18-11A1 1 0 0 0 2.73.87v22.26a1 1 0 0 0 .45.63z"/>
+      </svg>
+      <span id="fl-play">متوفر على Google Play</span>
+    </a>
+
+    <p class="footer-copy">© 2026 Aivexa Studio AI. All rights reserved.</p>
+    <p class="footer-dev">Developer: İSMAİL HORO — Esenyurt İstanbul 34513, Turkey — Developer ID: 5714195846802714632</p>
+  </div>
 </footer>
 
+<!-- BACK TO TOP — appears after scrolling 300px -->
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+
+<!-- =============================================
+     JAVASCRIPT
+     ============================================= -->
 <script>
-/* ── TRANSLATIONS ── */
-const T = {
-  en: {
-    dir:'ltr', lang:'en', btnLang:'عربي',
-    'nl-home':'Home','nl-pricing':'Pricing','nl-privacy':'Privacy Policy',
-    'nl-terms':'Terms of Service','nl-content':'Content Policy','nl-support':'Support',
-    'h-badge':'✨ Powered by xAI Grok Imagine',
-    'h-title':'Turn Your Ideas<br>Into <span class="grad">AI Videos</span>',
-    'h-sub':'Create cinematic-quality AI-generated videos in seconds. Type a description, upload an image, and watch your vision come to life — powered by the world\'s fastest AI video engine.',
-    'h-cta':'🚀 Try Free Now','h-plans':'View Plans',
-    'f-title':'Everything You Need to Create',
-    'f-sub':'Professional AI video generation with zero technical skills required',
-    'f1t':'Text to Video','f1d':'Describe your scene and Aivexa Studio AI generates a cinematic video from your words in seconds.',
-    'f2t':'Image to Video','f2d':'Upload any photo and bring it to life with smooth, realistic motion powered by xAI Aurora.',
-    'f3t':'AI Prompt Enhancement','f3d':'Our AI automatically improves your prompt for maximum visual quality and creative impact.',
-    'f4t':'Explore Feed','f4d':'Discover and share AI creations in a TikTok-style feed. Like, comment, and get inspired by the community.',
-    'f5t':'Ultra-Fast Generation','f5d':'Generate 5–15 second videos at up to 720p quality. Our smart queue ensures smooth performance for all users.',
-    'f6t':'Mobile-First Design','f6d':'Designed specifically for mobile. A native Android app experience optimized for phones and tablets.',
-    'p-title2':'Simple, Transparent Pricing','p-sub2':'Start free. Upgrade when you need more.',
-    'pn-free':'Free','pp-free':' forever','pd-free':'Perfect for trying Aivexa Studio AI',
-    'pf-f1':'50 welcome credits (one-time)','pf-f2':'5-second videos only','pf-f3':'480p resolution',
-    'pf-f4':'2 videos per day','pf-f5':'10s & 15s videos','pf-f6':'720p HD quality','pf-f7':'Priority queue',
-    'pb-free':'Get Started Free','pb-badge':'Most Popular',
-    'pn-pro':'⚡ Pro','pp-pro':'/month','pd-pro':'For regular creators who want more',
-    'pf-p1':'150 credits/month (renews monthly)','pf-p2':'5-second & 10-second videos',
-    'pf-p3':'480p + 720p HD','pf-p4':'5 videos per day','pf-p5':'Priority queue access',
-    'pf-p6':'Buy extra credits anytime','pf-p7':'15-second videos','pb-pro':'Start Pro',
-    'pn-ultra':'💎 Ultra','pp-ultra':'/month','pd-ultra':'For power users and professionals',
-    'pf-u1':'350 credits/month (renews monthly)','pf-u2':'5s, 10s & 15-second videos',
-    'pf-u3':'480p + 720p HD','pf-u4':'10 videos per day','pf-u5':'Highest priority queue',
-    'pf-u6':'Buy extra credits anytime','pf-u7':'All future features first','pb-ultra':'Start Ultra',
-    'p-note':'Subscriptions auto-renew monthly. Cancel anytime via Google Play Settings. Credits expire at the end of each billing cycle.',
-    'pricing-title':'Pricing & Subscriptions',
-    'fl-home':'Home','fl-pricing':'Pricing','fl-privacy':'Privacy Policy',
-    'fl-terms':'Terms of Service','fl-content':'Content Policy','fl-support':'Support',
-  },
+/* ─────────────────────────────────────────
+   TRANSLATION DICTIONARY
+   Every UI string in both Arabic and English.
+   Legal page body text stays in English only.
+   ───────────────────────────────────────── */
+const LANG = {
   ar: {
-    dir:'rtl', lang:'ar', btnLang:'English',
-    'nl-home':'الرئيسية','nl-pricing':'الأسعار','nl-privacy':'سياسة الخصوصية',
-    'nl-terms':'شروط الاستخدام','nl-content':'سياسة المحتوى','nl-support':'الدعم',
-    'h-badge':'✨ مدعوم بـ xAI Grok Imagine',
-    'h-title':'حوّل أفكارك<br>إلى <span class="grad">فيديوهات AI</span>',
-    'h-sub':'أنشئ فيديوهات سينمائية بالذكاء الاصطناعي في ثوانٍ. اكتب وصفاً أو ارفع صورة وشاهد إبداعك يتحول إلى حقيقة — مدعوم بأسرع محرك AI في العالم.',
+    dir: 'rtl', htmlLang: 'ar', bodyClass: 'lang-ar', btnLang: 'English',
+    /* Navbar */
+    'nl-home':'الرئيسية','nl-pricing':'الأسعار','nl-privacy':'الخصوصية',
+    'nl-terms':'الشروط','nl-content':'المحتوى','nl-support':'الدعم',
+    /* Mobile nav */
+    'ml-home':'الرئيسية','ml-pricing':'الأسعار','ml-privacy':'سياسة الخصوصية',
+    'ml-terms':'شروط الاستخدام','ml-content':'سياسة المحتوى','ml-support':'مركز الدعم',
+    /* Hero */
+    'h-badge':'متوفر الآن على Google Play',
+    /* h-title uses innerHTML, see applyLang() */
+    'h-sub':'حوّل أفكارك إلى فيديوهات سينمائية احترافية. اكتب وصفاً أو ارفع صورة وشاهد إبداعك يتحول إلى واقع مذهل.',
     'h-cta':'🚀 جرّب مجاناً الآن','h-plans':'عرض الخطط',
-    'f-title':'كل ما تحتاجه لتبدع',
-    'f-sub':'توليد فيديو احترافي بالذكاء الاصطناعي دون أي مهارات تقنية',
-    'f1t':'نص إلى فيديو','f1d':'صِف مشهدك وسيُنشئ Aivexa Studio AI فيديو سينمائياً من كلماتك في ثوانٍ.',
-    'f2t':'صورة إلى فيديو','f2d':'ارفع أي صورة وأضف إليها حركة واقعية وسلسة بتقنية xAI Aurora.',
-    'f3t':'تحسين البرومبت بالذكاء الاصطناعي','f3d':'يُحسّن ذكاؤنا الاصطناعي برومبتك تلقائياً لضمان أفضل جودة بصرية وتأثير إبداعي.',
-    'f4t':'تغذية الاستكشاف','f4d':'اكتشف وشارك إبداعات الذكاء الاصطناعي في تغذية تشبه TikTok. أعجب، علّق، واستلهم من المجتمع.',
-    'f5t':'توليد فائق السرعة','f5d':'أنشئ فيديوهات من 5 إلى 15 ثانية بجودة تصل إلى 720p. يضمن نظام الطابور الذكي أداءً سلساً لجميع المستخدمين.',
-    'f6t':'تصميم يُقدّم الهاتف أولاً','f6d':'مُصمَّم خصيصاً للهاتف المحمول. تجربة تطبيق Android محلية مُحسَّنة للهواتف والأجهزة اللوحية.',
-    'p-title2':'أسعار بسيطة وشفافة','p-sub2':'ابدأ مجاناً. اترقَّ حين تحتاج المزيد.',
-    'pn-free':'مجاني','pp-free':' للأبد','pd-free':'مثالي لتجربة Aivexa Studio AI',
+    /* Features */
+    'f-title':'كل ما تحتاجه للإبداع',
+    'f-sub':'توليد فيديو احترافي بالذكاء الاصطناعي — بدون أي خبرة تقنية',
+    'f1t':'نص إلى فيديو','f1d':'صِف مشهدك وسيحوّله الذكاء الاصطناعي المتقدم إلى فيديو سينمائي احترافي في ثوانٍ.',
+    'f2t':'صورة إلى فيديو','f2d':'ارفع أي صورة وأضف عليها حركة سلسة وواقعية — تحويل فوري لصورتك إلى فيديو حيّ.',
+    'f3t':'تحسين البرومبت تلقائياً','f3d':'يُحسّن الذكاء الاصطناعي وصفك تلقائياً لضمان أعلى جودة بصرية وأفضل نتيجة إبداعية.',
+    'f4t':'تغذية الاستكشاف','f4d':'اكتشف وشارك إبداعات المستخدمين في تغذية تفاعلية تشبه TikTok — استلهم وانشر.',
+    'f5t':'توليد فائق السرعة','f5d':'أنشئ فيديوهات من 5 إلى 15 ثانية بجودة تصل إلى 720p مع نظام طابور ذكي.',
+    'f6t':'مصمّم للهاتف أولاً','f6d':'تجربة مخصصة للهاتف المحمول — تطبيق Android أصلي مُحسَّن لجميع أحجام الشاشات.',
+    /* Pricing preview */
+    'p-title':'أسعار بسيطة وشفافة','p-sub':'ابدأ مجاناً. اترقَّ عندما تحتاج المزيد.',
+    'pn-free':'🆓 مجاني','pp-free':'$0','ppr-free':'للأبد','pt-free':'للتجربة والاستكشاف',
     'pf-f1':'50 كريدت ترحيبي (مرة واحدة)','pf-f2':'فيديوهات 5 ثوانٍ فقط','pf-f3':'دقة 480p',
-    'pf-f4':'فيديوان يومياً','pf-f5':'فيديوهات 10 و15 ثانية','pf-f6':'جودة HD 720p','pf-f7':'أولوية الطابور',
-    'pb-free':'ابدأ مجاناً','pb-badge':'الأكثر شعبية',
-    'pn-pro':'⚡ برو','pp-pro':'/شهر','pd-pro':'للمبدعين المنتظمين الذين يريدون المزيد',
-    'pf-p1':'150 كريدت/شهر (تُجدَّد شهرياً)','pf-p2':'فيديوهات 5 و10 ثوانٍ',
-    'pf-p3':'480p + 720p HD','pf-p4':'5 فيديوهات يومياً','pf-p5':'أولوية الوصول للطابور',
-    'pf-p6':'شراء كريدت إضافية في أي وقت','pf-p7':'فيديوهات 15 ثانية','pb-pro':'ابدأ برو',
-    'pn-ultra':'💎 ألترا','pp-ultra':'/شهر','pd-ultra':'للمستخدمين المحترفين',
-    'pf-u1':'350 كريدت/شهر (تُجدَّد شهرياً)','pf-u2':'فيديوهات 5 و10 و15 ثانية',
-    'pf-u3':'480p + 720p HD','pf-u4':'10 فيديوهات يومياً','pf-u5':'أعلى أولوية في الطابور',
-    'pf-u6':'شراء كريدت إضافية في أي وقت','pf-u7':'جميع الميزات المستقبلية أولاً','pb-ultra':'ابدأ ألترا',
-    'p-note':'الاشتراكات تتجدد تلقائياً شهرياً. يمكن الإلغاء في أي وقت عبر إعدادات Google Play. تنتهي صلاحية الكريدت في نهاية دورة الفوترة.',
-    'pricing-title':'الأسعار والاشتراكات',
+    'pf-f4':'فيديوان يومياً','pf-f5':'فيديوهات 10 و 15 ثانية','pf-f6':'جودة HD 720p',
+    'pb-free':'ابدأ مجاناً','pop-badge':'الأكثر شعبية',
+    'pn-pro':'⚡ برو','ppr-pro':'/شهر','pt-pro':'للمبدعين المنتظمين',
+    'pf-p1':'150 كريدت شهرياً (تتجدد)','pf-p2':'فيديوهات 5 و 10 ثوانٍ',
+    'pf-p3':'480p + 720p HD','pf-p4':'5 فيديوهات يومياً',
+    'pf-p5':'أولوية في الطابور','pf-p6':'شراء كريدت إضافية','pb-pro':'ابدأ برو',
+    'pn-ultra':'💎 ألترا','ppr-ultra':'/شهر','pt-ultra':'للمحترفين ومنشئي المحتوى',
+    'pf-u1':'350 كريدت شهرياً (تتجدد)','pf-u2':'فيديوهات 5 و 10 و 15 ثانية',
+    'pf-u3':'480p + 720p HD','pf-u4':'10 فيديوهات يومياً',
+    'pf-u5':'أعلى أولوية في الطابور','pf-u6':'جميع الميزات المستقبلية أولاً','pb-ultra':'ابدأ ألترا',
+    'p-note':'تتجدد الاشتراكات تلقائياً كل شهر. يمكن الإلغاء في أي وقت عبر إعدادات Google Play. تنتهي كريدت الاشتراك في نهاية دورة الفوترة.',
+    /* Pricing page */
+    'paging-h1':'الأسعار والاشتراكات',
+    /* Support page */
+    'sup-h1':'مركز الدعم',
+    'sup-sub':'نرد على جميع الاستفسارات خلال 2–3 أيام عمل. للمشكلات العاجلة المتعلقة بسلامة المحتوى نرد خلال 24 ساعة.',
+    'cc1t':'الدعم العام','cc1d':'أسئلة حول التطبيق والحسابات والكريدت والاشتراكات.',
+    'cc2t':'الإبلاغ عن محتوى','cc2d':'أبلغ عن فيديو أو مستخدم ينتهك سياسة المحتوى.',
+    'cc3t':'حذف الحساب','cc3d':'طلب حذف حسابك وجميع بياناتك الشخصية.',
+    'faq-h2':'الأسئلة الشائعة',
+    'fq1':'كيف أُلغي اشتراكي؟',
+    'fa1':'افتح تطبيق Google Play Store على جهازك، ثم اضغط على أيقونة صورتك الشخصية في الزاوية العلوية. اختر "المدفوعات والاشتراكات" ثم "الاشتراكات". ابحث عن Aivexa Studio AI واضغط عليه ثم اختر "إلغاء الاشتراك". يجب الإلغاء قبل 24 ساعة على الأقل من تاريخ التجديد.',
+    'fq2':'كيف أطلب استرداد مبلغ؟',
+    'fa2':'خلال 48 ساعة من أي شراء يمكنك طلب الاسترداد مباشرة من Google Play. بعد ذلك أرسل طلبك إلى aivexastudio@gmail.com مع رقم طلب Google Play. نراجع الطلبات خلال 5 أيام عمل.',
+    'fq3':'لماذا تم حذف أو رفض محتواي؟',
+    'fa3':'كل المحتوى في تغذية الاستكشاف يخضع لمراجعة يدوية. قد يُرفض المحتوى المخالف لسياسة المحتوى. ستصلك إشعار بسبب الرفض ويمكنك الاستئناف خلال 14 يوماً.',
+    'fq4':'كيف أحذف حسابي؟',
+    'fa4':'الملف الشخصي ← الإعدادات ← حذف الحساب ← اكتب DELETE للتأكيد. يُحذف كل شيء فوراً ونهائياً. يمكنك أيضاً إرسال طلب عبر البريد الإلكتروني.',
+    'fq5':'هل تنتهي صلاحية الكريدت؟',
+    'fa5':'كريدت الاشتراك الشهري تنتهي في نهاية دورة الفوترة ولا تُنقل. الكريدت الإضافية المشتراة بشكل منفصل لا تنتهي أبداً.',
+    'fq6':'لماذا يستغرق الفيديو وقتاً طويلاً أو يفشل؟',
+    'fa6':'قد يكون هناك ضغط في ساعات الذروة. إذا فشل التوليد بسبب خطأ تقني تُستردّ الكريدت تلقائياً. تواصل معنا إذا تكررت المشكلة.',
+    'fq7':'كيف أُبلّغ عن خطأ تقني؟',
+    'fa7':'أرسل بريداً إلى aivexastudio@gmail.com بعنوان "Bug Report" مع موديل جهازك وإصدار Android ووصف المشكلة.',
+    'fq8':'ما الفرق بين الخطط؟',
+    'fa8':'المجاني: 50 كريدت و5 ثوانٍ و480p وفيديوان يومياً. برو: 150 كريدت/شهر و10 ثوانٍ و720p و5 فيديوهات يومياً. ألترا: 350 كريدت/شهر و15 ثانية و720p و10 فيديوهات يومياً.',
+    'del-h3':'طلب حذف البيانات — Request Data Deletion',
+    'del-p1':'لديك الحق الكامل في طلب حذف جميع بياناتك الشخصية. You have the right to request deletion of all your personal data.',
+    'del-p2':'من داخل التطبيق: الملف الشخصي ← الإعدادات ← حذف الحساب ← اكتب DELETE للتأكيد. يُحذف كل شيء فوراً ونهائياً. In-app: Profile → Settings → Delete Account → type DELETE.',
+    'del-p3':'عبر البريد: aivexastudio@gmail.com بعنوان "Data Deletion Request". نعالج الطلب خلال 30 يوماً. Via email with subject "Data Deletion Request". Processed within 30 days.',
+    'del-note':'ملاحظة: قد تُحتفظ ببعض السجلات المالية لمدة تصل إلى 3 سنوات وفقاً للمتطلبات القانونية.',
+    /* Footer */
+    'ft-tagline':'أنشئ فيديوهات AI احترافية في ثوانٍ',
     'fl-home':'الرئيسية','fl-pricing':'الأسعار','fl-privacy':'سياسة الخصوصية',
     'fl-terms':'شروط الاستخدام','fl-content':'سياسة المحتوى','fl-support':'الدعم',
+    'fl-play':'متوفر على Google Play',
+  },
+  en: {
+    dir: 'ltr', htmlLang: 'en', bodyClass: 'lang-en', btnLang: 'عربي',
+    /* Navbar */
+    'nl-home':'Home','nl-pricing':'Pricing','nl-privacy':'Privacy','nl-terms':'Terms','nl-content':'Content','nl-support':'Support',
+    /* Mobile nav */
+    'ml-home':'Home','ml-pricing':'Pricing','ml-privacy':'Privacy Policy','ml-terms':'Terms of Service','ml-content':'Content Policy','ml-support':'Support Center',
+    /* Hero */
+    'h-badge':'Now Available on Google Play',
+    'h-sub':'Transform your ideas into cinematic AI-generated videos. Type a description or upload an image and watch your vision come to life.',
+    'h-cta':'🚀 Try Free Now','h-plans':'View Plans',
+    /* Features */
+    'f-title':'Everything You Need to Create',
+    'f-sub':'Professional AI video generation — no technical skills required',
+    'f1t':'Text to Video','f1d':'Describe your scene and our advanced AI generates a cinematic video from your words in seconds.',
+    'f2t':'Image to Video','f2d':'Upload any photo and bring it to life with smooth, realistic AI-powered motion.',
+    'f3t':'AI Prompt Enhancement','f3d':'Our AI automatically improves your description for maximum visual quality and creative impact.',
+    'f4t':'Explore Feed','f4d':'Discover and share AI creations in a TikTok-style feed — get inspired and publish your work.',
+    'f5t':'Ultra-Fast Generation','f5d':'Generate 5–15 second videos at up to 720p. Our smart queue ensures smooth performance for all users.',
+    'f6t':'Mobile-First Design','f6d':'Designed specifically for mobile — a native Android app optimized for all screen sizes.',
+    /* Pricing preview */
+    'p-title':'Simple, Transparent Pricing','p-sub':'Start free. Upgrade when you need more.',
+    'pn-free':'🆓 Free','pp-free':'$0','ppr-free':'forever','pt-free':'Perfect for trying the app',
+    'pf-f1':'50 welcome credits (one-time)','pf-f2':'5-second videos only','pf-f3':'480p resolution',
+    'pf-f4':'2 videos per day','pf-f5':'10s & 15s videos','pf-f6':'720p HD quality',
+    'pb-free':'Get Started Free','pop-badge':'Most Popular',
+    'pn-pro':'⚡ Pro','ppr-pro':'/month','pt-pro':'For regular creators',
+    'pf-p1':'150 credits/month (renews)','pf-p2':'5s & 10-second videos',
+    'pf-p3':'480p + 720p HD','pf-p4':'5 videos per day',
+    'pf-p5':'Priority queue access','pf-p6':'Buy extra credits anytime','pb-pro':'Start Pro',
+    'pn-ultra':'💎 Ultra','ppr-ultra':'/month','pt-ultra':'For professionals',
+    'pf-u1':'350 credits/month (renews)','pf-u2':'5s, 10s & 15s videos',
+    'pf-u3':'480p + 720p HD','pf-u4':'10 videos per day',
+    'pf-u5':'Highest priority queue','pf-u6':'All future features first','pb-ultra':'Start Ultra',
+    'p-note':'Subscriptions auto-renew monthly. Cancel anytime via Google Play Settings. Monthly credits expire at end of billing cycle.',
+    /* Pricing page */
+    'paging-h1':'Pricing & Subscriptions',
+    /* Support page */
+    'sup-h1':'Support Center',
+    'sup-sub':'We respond within 2–3 business days. For urgent content safety issues we respond within 24 hours.',
+    'cc1t':'General Support','cc1d':'Questions about the app, accounts, credits, or subscriptions.',
+    'cc2t':'Report Content','cc2d':'Report a video or user that violates our Content Policy.',
+    'cc3t':'Account Deletion','cc3d':'Request deletion of your account and all associated data.',
+    'faq-h2':'Frequently Asked Questions',
+    'fq1':'How do I cancel my subscription?',
+    'fa1':'Open the Google Play Store app, tap your profile picture icon in the top-right corner, select Payments and subscriptions, then Subscriptions. Find Aivexa Studio AI, tap it, and select Cancel subscription. Cancel at least 24 hours before your renewal date.',
+    'fq2':'How do I request a refund?',
+    'fa2':'Within 48 hours of any purchase you can request a refund directly from Google Play. After 48 hours email aivexastudio@gmail.com with your Google Play order number. We review requests within 5 business days.',
+    'fq3':'Why was my content removed or rejected?',
+    'fa3':'All Explore content is reviewed before becoming public. Content may be rejected for violating our Content Policy. You will receive a notification with the reason and may appeal within 14 days.',
+    'fq4':'How do I delete my account?',
+    'fa4':'Profile → Settings → Delete Account → type DELETE to confirm. Everything is deleted immediately and permanently. You can also email aivexastudio@gmail.com.',
+    'fq5':'Do credits expire?',
+    'fa5':'Monthly subscription credits expire at the end of each billing cycle. Extra credits purchased separately never expire. Welcome credits for new free users never expire either.',
+    'fq6':'Why is my video slow or failing?',
+    'fa6':'Generation may be slower during peak hours. If a generation fails due to a technical error on our side, credits are refunded automatically. Contact us if the issue persists.',
+    'fq7':'How do I report a bug?',
+    'fa7':'Email aivexastudio@gmail.com with subject "Bug Report" including your device model, Android version, and a description of the issue.',
+    'fq8':'What is the difference between the plans?',
+    'fa8':'Free: 50 one-time credits, 5s videos, 480p, 2 per day. Pro $9.99/mo: 150 monthly credits, 10s videos, 720p, 5 per day. Ultra $16.99/mo: 350 monthly credits, 15s videos, 720p, 10 per day.',
+    'del-h3':'طلب حذف البيانات — Request Data Deletion',
+    'del-p1':'You have the right to request deletion of all your personal data. لديك الحق الكامل في طلب حذف جميع بياناتك.',
+    'del-p2':'In-app: Profile → Settings → Delete Account → type DELETE to confirm. Everything is deleted immediately and permanently.',
+    'del-p3':'Via email: aivexastudio@gmail.com with subject "Data Deletion Request" and your account email. Processed within 30 days with confirmation sent.',
+    'del-note':'Note: Certain financial records may be retained up to 3 years for legal and tax compliance purposes.',
+    /* Footer */
+    'ft-tagline':'Create professional AI videos in seconds',
+    'fl-home':'Home','fl-pricing':'Pricing','fl-privacy':'Privacy Policy',
+    'fl-terms':'Terms of Service','fl-content':'Content Policy','fl-support':'Support',
+    'fl-play':'Available on Google Play',
   }
 };
 
-let lang = 'en';
+/* ─────────────────────────────────────────
+   STATE
+   ───────────────────────────────────────── */
+let currentLang = 'ar';
+let currentPage = 'home';
+let menuIsOpen  = false;
 
+/* ─────────────────────────────────────────
+   applyLang() — updates every translated element
+   ───────────────────────────────────────── */
 function applyLang() {
-  const t = T[lang];
-  document.documentElement.lang = t.lang;
-  document.documentElement.dir = t.dir;
-  document.body.className = lang === 'ar' ? 'ar' : 'en';
+  const t = LANG[currentLang];
+
+  // Update <html> tag
+  document.documentElement.lang = t.htmlLang;
+  document.documentElement.dir  = t.dir;
+
+  // Update body class (controls font)
+  document.body.className = t.bodyClass;
+
+  // Update language button label
   document.getElementById('langBtn').textContent = t.btnLang;
-  Object.keys(t).forEach(k => {
-    if(['dir','lang','btnLang','h-title'].includes(k)) return;
-    const el = document.getElementById(k);
-    if(el) el.textContent = t[k];
+
+  // Update every element whose ID is in the dictionary
+  Object.keys(t).forEach(function(key) {
+    // Skip non-element keys
+    if (['dir','htmlLang','bodyClass','btnLang'].includes(key)) return;
+    var el = document.getElementById(key);
+    if (!el) return;
+    el.textContent = t[key];
   });
-  // h-title uses innerHTML
-  const ht = document.getElementById('h-title');
-  if(ht) ht.innerHTML = t['h-title'];
+
+  // Hero title uses innerHTML (contains <br> and <span class="grad">)
+  var htEl = document.getElementById('h-title');
+  if (htEl) {
+    if (currentLang === 'ar') {
+      htEl.innerHTML = 'أنشئ فيديوهاتك<br>بالذكاء الاصطناعي <span class="grad">في ثوانٍ</span>';
+    } else {
+      htEl.innerHTML = 'Create Your Videos<br>With AI <span class="grad">In Seconds</span>';
+    }
+  }
 }
 
-function toggleLang(){
-  lang = lang === 'en' ? 'ar' : 'en';
+/* ─────────────────────────────────────────
+   toggleLang()
+   ───────────────────────────────────────── */
+function toggleLang() {
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
   applyLang();
 }
 
-function showPage(p){
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.getElementById(p+'-page').classList.add('active');
-  window.scrollTo({top:0,behavior:'instant'});
+/* ─────────────────────────────────────────
+   navigate(pageId) — show a page with fade, scroll to top
+   ───────────────────────────────────────── */
+function navigate(pageId) {
+  // Hide current page
+  var current = document.getElementById('page-' + currentPage);
+  if (current) current.classList.remove('active');
+
+  // Show new page
+  var target = document.getElementById('page-' + pageId);
+  if (target) {
+    target.classList.add('active');
+    // The CSS animation replays via re-triggering: remove/add class
+    target.classList.remove('active');
+    void target.offsetWidth; // force reflow
+    target.classList.add('active');
+  }
+
+  currentPage = pageId;
+
+  // Scroll to top instantly
+  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  // Update active nav link highlight
+  ['home','pricing','privacy','terms','content','support'].forEach(function(id) {
+    var link = document.getElementById('nl-' + id);
+    if (link) link.classList.toggle('active', id === pageId);
+  });
+
+  // Close mobile menu if open
+  closeMenu();
+
+  // Update URL hash for bookmarking
+  history.replaceState(null, '', '#' + pageId);
 }
 
-// Handle hash routing
-const hash = window.location.hash.replace('#','');
-if(['privacy','terms','content','pricing'].includes(hash)) showPage(hash);
+/* ─────────────────────────────────────────
+   toggleMenu() / closeMenu() — hamburger
+   ───────────────────────────────────────── */
+function toggleMenu() {
+  menuIsOpen = !menuIsOpen;
+  var menu = document.getElementById('mobileNav');
+  var hb   = document.getElementById('hamburger');
+  if (menuIsOpen) {
+    menu.classList.add('open');
+    hb.classList.add('is-open');
+  } else {
+    menu.classList.remove('open');
+    hb.classList.remove('is-open');
+  }
+}
 
-// Auto-detect language
-const bl = (navigator.language||'en').toLowerCase();
-if(bl.startsWith('ar')){ lang='ar'; applyLang(); }
+function closeMenu() {
+  menuIsOpen = false;
+  var menu = document.getElementById('mobileNav');
+  var hb   = document.getElementById('hamburger');
+  if (menu) menu.classList.remove('open');
+  if (hb)   hb.classList.remove('is-open');
+}
+
+/* ─────────────────────────────────────────
+   toggleFaq(qEl) — accordion
+   ───────────────────────────────────────── */
+function toggleFaq(qEl) {
+  var aEl    = qEl.nextElementSibling;
+  var isOpen = qEl.classList.contains('open');
+
+  // Close all items first
+  document.querySelectorAll('.faq-q').forEach(function(q) { q.classList.remove('open'); });
+  document.querySelectorAll('.faq-a').forEach(function(a) { a.classList.remove('open'); });
+
+  // Open clicked item if it wasn't already open
+  if (!isOpen) {
+    qEl.classList.add('open');
+    aEl.classList.add('open');
+  }
+}
+
+/* ─────────────────────────────────────────
+   Back to Top button — show after 300px scroll
+   ───────────────────────────────────────── */
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('backToTop');
+  if (window.scrollY > 300) {
+    btn.classList.add('visible');
+  } else {
+    btn.classList.remove('visible');
+  }
+});
+
+/* ─────────────────────────────────────────
+   Hash-based routing — support direct URLs like /#privacy
+   ───────────────────────────────────────── */
+(function handleInitialHash() {
+  var hash  = window.location.hash.replace('#', '');
+  var valid = ['home','pricing','privacy','terms','content','support'];
+  if (valid.includes(hash)) {
+    navigate(hash);
+  } else {
+    // Set default active state on nav
+    var link = document.getElementById('nl-home');
+    if (link) link.classList.add('active');
+  }
+})();
+
+window.addEventListener('hashchange', function() {
+  var hash  = window.location.hash.replace('#', '');
+  var valid = ['home','pricing','privacy','terms','content','support'];
+  if (valid.includes(hash)) navigate(hash);
+});
+
+/* ─────────────────────────────────────────
+   Auto-detect browser language on first visit
+   ───────────────────────────────────────── */
+(function detectLanguage() {
+  var bl = (navigator.language || navigator.userLanguage || 'ar').toLowerCase();
+  if (!bl.startsWith('ar')) {
+    currentLang = 'en';
+    applyLang();
+  }
+  // If AR, the default HTML already has Arabic text so no change needed
+})();
 </script>
+
 </body>
 </html>

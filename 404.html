@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script>
+    var path = window.location.pathname;
+    var base = '/aivexa-studio';
+    var page = path.replace(base, '').replace(/^\//, '');
+    if (page) {
+      window.location.replace(base + '/#' + page);
+    } else {
+      window.location.replace(base + '/');
+    }
+  </script>
+</head>
+<body></body>
+</html>
